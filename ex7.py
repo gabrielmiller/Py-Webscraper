@@ -5,8 +5,8 @@
 
 import urllib2
 import time
-import psycopg2
-import urlparse
+#import psycopg2
+#import urlparse
 
 URLDir = []
 #for num of hops, each element of urlDir refers to a list of urls at that hop from the seed
@@ -17,19 +17,21 @@ frontier = 0
 class URL():
     def __init__(self, URL):
         self.URL = URL
-        #URLDir[hop].append(URL)
-
-    def grabPage(self):
-        try:
-            self.request = urllib2.urlopen(self.URL)
-            self.page = self.request.read()
-        except ValueError:
-            print "That URL couldn't be interpreted. Results of that href were thrown out."
-            self.error = True
-        except:
-            print "An unknown error occurred"
+        #self.request = urllib2.urlopen(self.URL)
+        #self.page = self.request.read()[:]
         #self.pageheaders = self.request.headers.__dict__
 
+    def grabPage(self):
+        self.request = urllib2.urlopen(self.URL)
+        self.page = self.request.read()[:]
+        self.pageheaders = self.request.headers.__dict__
+        #except ValueError:
+        #    print "That URL couldn't be interpreted. Results of that href were thrown out. (4)"
+        #    self.error = True
+        #except AttributeError:
+        #    print "That URL couldn't be interpreted. Results of that href were thrown out. (5)"
+        #    self.error = True
+        #    print "An unknown error occurred (3)"
     def writeDB(self, URL, title, hitsinternal, hitsexternal, hops, meta, date):
         pass
 
@@ -38,26 +40,37 @@ class URL():
 
     def findHref(self):
         global hop
-        # while loop chops href attributes from page and appends their references to urlList to be crawled
-        while ("href=\"" in self.page):
-            offset1 = self.page.find("href=\"")
-            offset2 = self.page.find("\"", offset1+6)
-            if (offset1 == -1) | (offset2 == -1):
-                break
-                #No more href attributes found
-            else:
+        #while loop chops href attributes from page and appends their references to URLDir to be crawled
+        try:
+            while ("href=\"" in self.page):
+                offset1 = self.page.find("href=\"")
+                offset2 = self.page.find("\"", offset1+6)
+                #if (offset1 == -1) | (offset2 == -1):
+                #    break
+                #    #No more href attributes found
+                #else:
+                #    newURL = self.page[offset1+6:offset2]
+
                 newURL = self.page[offset1+6:offset2]
 
-            if newURL[:6] !="http://":
-                newURL = self.URL+newURL
-            try:
-                URLDir[hop+1].append(URL(newURL))
-            except IndexError:
-                URLDir.append([])
-                URLDir[hop+1].append(URL(newURL))
-            except:
-                print "An unknown error occurred"
-            self.page = self.page[:offset1] + self.page[offset2+1:]
+                if newURL[:6] !="http://":
+                    newURL = self.URL+newURL
+                    #Need to look into urlparse to construct urls for relative urls
+
+                try:
+                    URLDir[hop+1].append(URL(newURL))
+                except IndexError:
+                    URLDir.append([])
+                    URLDir[hop+1].append(URL(newURL))
+                #except:
+                #    print "An unknown error occurred (2)"
+                self.page = self.page[:offset1] + self.page[offset2+1:]
+
+        except AttributeError:
+            print "An unknown error occurred (6)" # URL instance has no attribute 'page'
+        #except:
+        #    print "An unknown error occurred (7)"
+        print "URLDir is now "+str(len(URLDir[hop+1]))
 
 def main():
     global hop, frontier
@@ -105,19 +118,29 @@ def main():
     print "seedURL: \t"+seedURL+"\nmaxFrontiers: \t"+str(maxFrontiers)+"\nmaxHops: \t"+str(maxHops)
     print 50*"#"
 
-    seed = URL(seedURL)
-    URLDir.append(seed)
+    #seed = URL(seedURL)
+    #URLDir.append(seed)
+    URLDir.append(URL(seedURL))
 
     def URLProcess(input):
         global frontier
         if type(input)==list:
             for item in input:
-                print item, item.URL
-                item.grabPage()
-                frontier = frontier+1
-                if item.error in locals():
-                    item.findHref()
-                time.sleep(1)
+                if maxFrontiers!=frontier:
+                    print item, item.URL
+                    #item.grabPage()
+                    frontier = frontier+1
+                    try:
+                        if item.error == True:
+                            pass
+                    except AttributeError:
+                        item.findHref()
+                        #time.sleep(2)
+                    except:
+                        print "An unknown error occurred (1)"
+                else:
+                    print 50*"#"
+                    break
         else:
             print input, input.URL
             input.grabPage()
@@ -132,11 +155,13 @@ def main():
     #        else:
     #            URLprocess(item)
 
-    while ((maxHops>hop) & (maxFrontiers>frontier)):
+    while ((maxHops>=hop) & (maxFrontiers>frontier)):
         print "hop is "+str(hop)
         URLProcess(URLDir[hop])
         time.sleep(1)
         hop = hop+1
+
+    print 50*"#"
 
     #URLGrab(URLDir[:maxHops+1])
 
