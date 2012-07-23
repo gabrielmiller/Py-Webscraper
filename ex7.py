@@ -6,7 +6,7 @@
 import urllib2
 import time
 #import psycopg2
-#import urlparse
+import urlparse
 
 URLDir = []
 #for num of hops, each element of urlDir refers to a list of urls at that hop from the seed
@@ -17,9 +17,6 @@ frontier = 0
 class URL():
     def __init__(self, URL):
         self.URL = URL
-        #self.request = urllib2.urlopen(self.URL)
-        #self.page = self.request.read()[:]
-        #self.pageheaders = self.request.headers.__dict__
 
     def grabPage(self):
         self.request = urllib2.urlopen(self.URL)
@@ -32,62 +29,62 @@ class URL():
         #    print "That URL couldn't be interpreted. Results of that href were thrown out. (5)"
         #    self.error = True
         #    print "An unknown error occurred (3)"
+
     def writeDB(self, URL, title, hitsinternal, hitsexternal, hops, meta, date):
         pass
 
     def readDB(self, URL, title, hitsinternal, hitsexternal, hops, meta, date):
         pass
 
-    def findHref(self):
-        global hop
+    def findHref(self, frontier=frontier, hop=hop):
+        #global hop
         #while loop chops href attributes from page and appends their references to URLDir to be crawled
-        try:
-            while ("href=\"" in self.page):
-                offset1 = self.page.find("href=\"")
-                offset2 = self.page.find("\"", offset1+6)
-                #if (offset1 == -1) | (offset2 == -1):
-                #    break
-                #    #No more href attributes found
-                #else:
-                #    newURL = self.page[offset1+6:offset2]
 
-                newURL = self.page[offset1+6:offset2]
+        while ("href=\"" in self.page):
+            offset1 = self.page.find("href=\"")
+            offset2 = self.page.find("\"", offset1+6)
 
-                if newURL[:6] !="http://":
-                    newURL = self.URL+newURL
-                    #Need to look into urlparse to construct urls for relative urls
+            newURL = urlparse.urljoin(self.URL,self.page[offset1+6:offset2])
 
-                try:
-                    URLDir[hop+1].append(URL(newURL))
-                except IndexError:
-                    URLDir.append([])
-                    URLDir[hop+1].append(URL(newURL))
+            if (len(URLDir) < hop+2):
+                URLDir.append([])
+
+            URLDir[hop+1].append(URL(newURL))
+
+                #try:
+                #    URLDir[hop+1].append(URL(newURL))
+                #except IndexError:
+                #    URLDir.append([])
+                #    URLDir[hop+1].append(URL(newURL))
                 #except:
                 #    print "An unknown error occurred (2)"
-                self.page = self.page[:offset1] + self.page[offset2+1:]
 
-        except AttributeError:
-            print "An unknown error occurred (6)" # URL instance has no attribute 'page'
+            self.page = self.page[:offset1] + self.page[offset2+1:]
+
+        #except AttributeError:
+        #    print "An unknown error occurred (6)" # URL instance has no attribute 'page'
         #except:
         #    print "An unknown error occurred (7)"
-        print "URLDir is now "+str(len(URLDir[hop+1]))
+        #print "URLDir is now "str(URLDir[hop+1].)
 
-def main():
-    global hop, frontier
+def main(hop=hop, frontier=frontier):
+    #global hop, frontier
     while 1:
         input = raw_input("Enter a seed url >> ")
         """
         try:
-            if (type(input) == str) & (input[:7] == "http://") & (input[-1] == "/"):
+            if (type(input) == str) & (input[:7] == "http://"):
                 break
             else:
-                print "Your input must be a string that begins with http:// and ends with /"
-        except IndexError:
-            print "Your input must be a string that begins with http:// and ends with /"
+                print "Your input must be a string that begins with http://"
+        except IndexError: #in case input was left blank
+            print "Your input must be a string that begins with http://"
         except:
-            print "An unexpected error occurred. Please try again. \nYour input must be a string that begins with http:// and ends with /"
+            print "An unexpected error occurred. Please try again. \nYour input must be a string that begins with http://"
         """ 
-        input = "http://localhost/~batman/"
+
+        #input = "http://localhost/~batman/"
+        input = "http://buttbox:8002/~gabe/"
         break
     seedURL = input[:]
 
@@ -122,8 +119,8 @@ def main():
     #URLDir.append(seed)
     URLDir.append(URL(seedURL))
 
-    def URLProcess(input):
-        global frontier
+    def URLProcess(input, hop=hop, frontier=frontier):
+        #global frontier
         if type(input)==list:
             for item in input:
                 if maxFrontiers!=frontier:
