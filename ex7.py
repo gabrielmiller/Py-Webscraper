@@ -10,7 +10,7 @@ import urlparse
 
 URLDir = []
 #for num of hops, each element of urlDir refers to a list of urls at that hop from the seed
-#URLDir[1] refers to all urls 2 hops from the seed, while urlDir[5] refers to all urls 6 hops from the seed
+#URLDir[1] refers to all urls 1 hop from the seed, while urlDir[5] refers to all urls 5 hops from the seed
 hop = 0
 frontier = 0
 
