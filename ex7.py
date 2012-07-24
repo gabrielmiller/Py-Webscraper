@@ -11,12 +11,14 @@ import urlparse
 URLDir = []
 #for num of hops, each element of urlDir refers to a list of urls at that hop from the seed
 #URLDir[1] refers to all urls 1 hop from the seed, while urlDir[5] refers to all urls 5 hops from the seed
-hop = 0
-frontier = 0
+#hop = 0
+#frontier = 0
 
 class URL():
     def __init__(self, URL):
         self.URL = URL
+        self.hop = hop
+        self.frontier = frontier
 
     def grabPage(self):
         self.request = urllib2.urlopen(self.URL)
@@ -36,7 +38,7 @@ class URL():
     def readDB(self, URL, title, hitsinternal, hitsexternal, hops, meta, date):
         pass
 
-    def findHref(self, frontier=frontier, hop=hop):
+    def findHref(self):
         #global hop
         #while loop chops href attributes from page and appends their references to URLDir to be crawled
 
@@ -46,10 +48,10 @@ class URL():
 
             newURL = urlparse.urljoin(self.URL,self.page[offset1+6:offset2])
 
-            if (len(URLDir) < hop+2):
-                URLDir.append([])
+            #if (len(URLDir) < hop+2):
+            #    URLDir.append([])
 
-            URLDir[hop+1].append(URL(newURL))
+            #URLDir[hop+1].append(URL(newURL,hop))
 
                 #try:
                 #    URLDir[hop+1].append(URL(newURL))
@@ -65,9 +67,16 @@ class URL():
         #    print "An unknown error occurred (6)" # URL instance has no attribute 'page'
         #except:
         #    print "An unknown error occurred (7)"
-        #print "URLDir is now "str(URLDir[hop+1].)
+        #print "URLDir is now "+str(URLDir)
 
-def main(hop=hop, frontier=frontier):
+        for item in URLDir:
+            if type(item)==list:
+                for subitem in item:
+                    print '\t'+subitem.URL, subitem.hop
+            else:
+                print item.URL, item.hop
+
+def main():
     #global hop, frontier
     while 1:
         input = raw_input("Enter a seed url >> ")
@@ -119,31 +128,31 @@ def main(hop=hop, frontier=frontier):
     #URLDir.append(seed)
     URLDir.append(URL(seedURL))
 
-    def URLProcess(input, hop=hop, frontier=frontier):
+    def URLProcess(input):
         #global frontier
         if type(input)==list:
             for item in input:
-                if maxFrontiers!=frontier:
-                    print item, item.URL
-                    #item.grabPage()
-                    frontier = frontier+1
-                    try:
-                        if item.error == True:
-                            pass
-                    except AttributeError:
-                        item.findHref()
+#                if maxFrontiers!=frontier:
+#                    print item, item.URL
+#                    item.grabPage()
+#                    frontier = frontier+1
+#                    try:
+#                        if item.error == True:
+#                            pass
+#                    except AttributeError:
+#                        item.findHref()
                         #time.sleep(2)
-                    except:
-                        print "An unknown error occurred (1)"
-                else:
-                    print 50*"#"
-                    break
-        else:
-            print input, input.URL
-            input.grabPage()
-            frontier = frontier+1
-            input.findHref()
-            time.sleep(1)
+#                    except:
+#                        print "An unknown error occurred (1)"
+#                else:
+#                    print 50*"#"
+#                    break
+#        else:
+#            print input, input.URL
+#            input.grabPage()
+#            frontier = frontier+1
+#            input.findHref()
+#            time.sleep(1)
 
     #def URLGrab(input):
     #    for item in input:
@@ -152,11 +161,11 @@ def main(hop=hop, frontier=frontier):
     #        else:
     #            URLprocess(item)
 
-    while ((maxHops>=hop) & (maxFrontiers>frontier)):
-        print "hop is "+str(hop)
-        URLProcess(URLDir[hop])
-        time.sleep(1)
-        hop = hop+1
+#    while ((maxHops>=hop) & (maxFrontiers>frontier)):
+#        print "hop is "+str(hop)
+#        URLProcess(URLDir[hop])
+#        time.sleep(1)
+#        hop = hop+1
 
     print 50*"#"
 
