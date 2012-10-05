@@ -1,23 +1,27 @@
-# Web scraper
-# This script will scrape an entire webpage and store it in a database
-# It will scan for links on the page and scan each of them.
-# Based on the number of links to a page, a page will gain a higher rank
-
-import urllib2
+import requests
+import BeautifulSoup
 import time
-#import psycopg2
 import urlparse
+import google.appengine.ext
+import itertools
 
-URLDir = []
-#for num of hops, each element of urlDir refers to a list of urls at that hop from the seed
-#URLDir[1] refers to all urls 1 hop from the seed, while urlDir[5] refers to all urls 5 hops from the seed
+URLList, linkCache = [], []
 
 class URL():
-    def __init__(self, URL, hop=0):
-        self.URL = URL
-        self.hop = hop
+    _instanceID = itertools.count(0)
 
-    def grabPage(self):
+    def __init__(self, URL):
+        self.URL = URL
+        self.count = self._instanceID.next()
+
+    def getPage(self):
+        #set User-Agent
+        #check robots. If robots says no scanning, throw out page
+        self.request = requests.get(URL)
+        #scan title and body, strip javascript from body, remove linebreaks and read line by line
+        #parsePage(page) Look for links, adding to URLList if the link is not in linkCache, with a reference to its parent. Add to the link cache.
+
+        """
         try:
             self.request = urllib2.urlopen(self.URL)
             self.page = self.request.read()[:]
@@ -25,18 +29,17 @@ class URL():
         except urllib2.HTTPError:
             print "\n HTTP Error occurred. This page was thrown out."
             self.error = True
-    def findHref(self):
-        #while loop chops href attributes from page and appends their references to URLDir to be crawled
-
+        """
+    def parsePage(self):
+        pass
+        """
         while ("href=\"" in self.page):
             offset1 = self.page.find("href=\"")
             offset2 = self.page.find("\"", offset1+6)
-
             newURL = urlparse.urljoin(self.URL,self.page[offset1+6:offset2])
-
             URLDir.append(URL(URL=newURL,hop=self.hop+1))
-
             self.page = self.page[:offset1] + self.page[offset2+1:]
+        """
 
 def main():
     while 1:
@@ -51,10 +54,10 @@ def main():
             print "Your input must be a string that begins with http://"
         except:
             print "An unexpected error occurred. Please try again. \nYour input must be a string that begins with http://"
-        """ 
+        """
 
-        #input = "http://localhost/~batman/"
-        input = "http://buttbox:8002/~gabe/"
+        input = "http://localhost/~batman/"
+        #input = "http://buttbox:8002/~gabe/"
         break
     seedURL = input[:]
 
@@ -85,12 +88,13 @@ def main():
     print "seedURL: \t"+seedURL+"\nmaxFrontiers: \t"+str(maxFrontiers)+"\nmaxHops: \t"+str(maxHops)
     print 50*"#"
 
-    URLDir.append(URL(seedURL))
+    URLDir.append((URL(seedURL),NULL,0))
+    linkCache.append(seedURL,NULL)
 
     def URLProcess(input):
-        input.grabPage()
+        input.getPage()
         if "error" not in dir(input):
-            input.findHref()
+            input.parsePage()
         #time.sleep(1)
         print "hop="+str(input.hop), "instance="+str(input), "len(URLDir)="+str(len(URLDir)), "URL="+input.URL
 
@@ -118,6 +122,7 @@ database schema:
     url:    varchar(255)
     inside_hitcounts: int(16)
     outside_hitcounts: int(16)
+    rank: int(2)
     title:  varchar(255)
     meta:   varchar(1024)
     page:   varchar(65536)
