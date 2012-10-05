@@ -1,0 +1,26 @@
+application: toastie
+version: 1
+runtime: python27
+api_version: 1
+threadsafe: true
+
+handlers:
+
+- url: /favicon\.ico
+  static_files: favicon.ico
+  upload: favicon\.ico
+
+- url: /toastie\.css
+  static_files: toastie.css
+  upload: toastie\.css
+
+- url: /.*
+  script: search.app
+
+libraries:        
+
+- name: jinja2                                                                  
+  version: latest     
+
+- name: markupsafe                                                              
+  version: latest
