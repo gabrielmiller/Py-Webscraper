@@ -7,7 +7,7 @@ import itertools
 import re
 import robotparser
 
-URLList, linkCache, blacklist = [], [], []
+URLList, linkCache, blacklist = [], {}, []
 
 class URL():
     _instanceID = itertools.count(0)
@@ -20,11 +20,8 @@ class URL():
         headers = {'User-agent':'Toastie'}
         #check robots. If robots says no scanning, throw out page
         #robotcheck = requests.get(urlparse.urlparse(URL)[1]+/robots.txt')
-        #if robots.txt exists, parse it and see what pages aren't allowed. add them to blacklist
         self.request = requests.get(URL, headers=headers)
         self.soup = BeautifulSoup.BeautifulSoup(self.request.text)
-        #scan title and body, strip javascript from body, remove linebreaks and read line by line
-        #parsePage(page) Look for links, adding to URLList if the link is not in linkCache, with a reference to its parent. Add to the link cache.
 
     def visibleElements(element):
         if element.parent.name in ['style', 'script', '[document]', 'head', 'title']:
@@ -34,17 +31,36 @@ class URL():
         return True
 
     def parsePage(self):
-        self.title = self.soup.find('title').text 
+        self.title = self.soup.find('title').text
         self.text = self.soup.findAll(text=true)
         self.pageText = ''
         for item in filter(visibleElements, self.text):
             if item != '\n':
                 visibleText = visibleText+item
+        self.pagelinks = []
         for link in soup.findAll('a'):
+            self.pagelinks.append(link.get('href'))
+        self.pagelinks.sort()
+        for link in self.pagelinks:
+            self.lastitem = self.pagelinks[-1]
+            #determine if link is a duplicate of the previous. if so, throw it out.
+            for i in range(len(self.pagelinks) - 2, -1, -1):
+                if self.lastitem == self.pagelinks[i]:
+                    del self.pagelinks[i]
+                else:
+                    self.lastitem = self.pagelinks[i]
             #determine if link is relative or absolute. if relative, change it to absolute
+
+            #determine if link can be acquired by checking robots.txt
+
             if link in linkCache:
+                if link in linkCache[self.URL]:
+                    pass
+                else:
+                    linkCache[self.URL].append(link)
+            else:
                 URLList.append(link)
-                linkCache[URL]
+                linkCache[self.URL]=[link]
 
 def main():
     while 1:
