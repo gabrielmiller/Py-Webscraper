@@ -4,8 +4,10 @@ import time
 import urlparse
 import google.appengine.ext
 import itertools
+import re
+import robotparser
 
-URLList, linkCache = [], []
+URLList, linkCache, blacklist = [], [], []
 
 class URL():
     _instanceID = itertools.count(0)
@@ -15,31 +17,34 @@ class URL():
         self.count = self._instanceID.next()
 
     def getPage(self):
-        #set User-Agent
+        headers = {'User-agent':'Toastie'}
         #check robots. If robots says no scanning, throw out page
-        self.request = requests.get(URL)
+        #robotcheck = requests.get(urlparse.urlparse(URL)[1]+/robots.txt')
+        #if robots.txt exists, parse it and see what pages aren't allowed. add them to blacklist
+        self.request = requests.get(URL, headers=headers)
+        self.soup = BeautifulSoup.BeautifulSoup(self.request.text)
         #scan title and body, strip javascript from body, remove linebreaks and read line by line
         #parsePage(page) Look for links, adding to URLList if the link is not in linkCache, with a reference to its parent. Add to the link cache.
 
-        """
-        try:
-            self.request = urllib2.urlopen(self.URL)
-            self.page = self.request.read()[:]
-            self.pageheaders = self.request.headers.__dict__
-        except urllib2.HTTPError:
-            print "\n HTTP Error occurred. This page was thrown out."
-            self.error = True
-        """
+    def visibleElements(element):
+        if element.parent.name in ['style', 'script', '[document]', 'head', 'title']:
+            return False
+        elif re.match('<!--.*-->', str(element)):
+            return False
+        return True
+
     def parsePage(self):
-        pass
-        """
-        while ("href=\"" in self.page):
-            offset1 = self.page.find("href=\"")
-            offset2 = self.page.find("\"", offset1+6)
-            newURL = urlparse.urljoin(self.URL,self.page[offset1+6:offset2])
-            URLDir.append(URL(URL=newURL,hop=self.hop+1))
-            self.page = self.page[:offset1] + self.page[offset2+1:]
-        """
+        self.title = self.soup.find('title').text 
+        self.text = self.soup.findAll(text=true)
+        self.pageText = ''
+        for item in filter(visibleElements, self.text):
+            if item != '\n':
+                visibleText = visibleText+item
+        for link in soup.findAll('a'):
+            #determine if link is relative or absolute. if relative, change it to absolute
+            if link in linkCache:
+                URLList.append(link)
+                linkCache[URL]
 
 def main():
     while 1:
@@ -96,6 +101,7 @@ def main():
         if "error" not in dir(input):
             input.parsePage()
         #time.sleep(1)
+        #Consider pulling time interval from robots.txt
         print "hop="+str(input.hop), "instance="+str(input), "len(URLDir)="+str(len(URLDir)), "URL="+input.URL
 
     for index, item in enumerate(URLDir):
