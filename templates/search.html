@@ -2,7 +2,9 @@
 
 {% block body %}
 
+<!--
 <h2>{{ query }}</h2>
+-->
 
 <p class="text-error">{{ error }}</p>
 
@@ -15,11 +17,11 @@
         </div>
         <div class="span10">
             {% for result in scrapeData %}
-                <article>
-                    <h3>&quot;{{ result.title }}&quot;</h3>
-                    <h4>Scanned on {{ result.scrapeDate }}</h4>
-                    <p>{{ result.Text }}</p> 
-                </article>
+                <h4>&quot;{{ result.title }}&quot;</h4>
+                <h6>Scanned on {{ result.scrapeDate }}</h6>
+                <p class="muted">{{ result.text }}</h5>
+                <p>{{ result.Text }}</p> 
+                <br>
             {% endfor %}
         </div>
     </div>

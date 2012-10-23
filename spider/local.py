@@ -12,12 +12,8 @@ URLList, linkCache, blacklist = [], {}, []
 #testing
 whitelist = ['127.0.0.1']
 
-class scrapeData(db.Model): #db schema
-    title = db.StringProperty()
-    text = db.TextProperty()
-    scrapeData = db.DateTimeProperty(auto_now_add=True)
-    parent = db.StringProperty()
-    rank = db.IntegerProperty()
+def test():
+    return "hi!"
 
 class URL():
     _instanceID = itertools.count(0)
@@ -153,10 +149,10 @@ def main():
     print 50*"#"
 
     input = raw_input("Press enter to exit")
-
+"""
 if __name__ == "__main__":
     main()
-
+"""
 
 """
 database schema:

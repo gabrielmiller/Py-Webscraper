@@ -1,6 +1,8 @@
 import os
 import webapp2
 import jinja2
+import time
+#import spider.local
 from google.appengine.ext import db
 
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
@@ -25,16 +27,18 @@ class Handler(webapp2.RequestHandler):
         self.write(self.render_str(template, **kwargs))
 
 class MainPage(Handler):
-    def render_page(self, error="", query=""):
+    def render_page(self, error="", **kwargs):
         scrapeData = db.GqlQuery("SELECT * FROM scrapeData") # SEARCH THROUGH ITEMS
         #scrapeData = "test"
-        self.render("search.html", scrapeData=scrapeData, error=error)
+        currentTime = time.strftime('%B %d, %H:%M:%S')
+        self.render("search.html", scrapeData=scrapeData, error=error, time=currentTime, **kwargs)
 
     def get(self):
-        self.render_page()
+        query = self.request.get('query')
+        self.render_page(query=query)
 
     def post(self):
-        error = "This site does not accept post requests."
+        error = "This website does not accept post requests."
         self.render("search.html", error=error)
 
 class Junk(Handler):

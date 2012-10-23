@@ -1,7 +1,7 @@
 <!doctype HTML>
 <html lang="en">
 <head>
-    <title>Toast Search</title>
+    <title>Toastie Search</title>
     <link rel="stylesheet" type="text/css" href="bootstrap.css">
     <!--
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,11 +9,15 @@
     -->
 </head>
 <body>
-<h1>Toast Search</h1>
-<form>
-    <input class="input-xlarge">{{ query }}</input>
-    <button type="submit" class="btn">Search</button>
-</form>
+<div class="row-fluid">
+    <div class="span8 offset2">
+        <h1>Toastie Search</h1>
+        <form method="get">
+            <input class="input-xlarge" name="query" value="{{ query }}"></input>
+            <button type="submit" class="btn">Search</button>
+        </form>
+    </div>
+</div>
 
 {% block body %}
 {% endblock %}
