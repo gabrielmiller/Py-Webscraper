@@ -10,9 +10,9 @@ handlers:
   static_files: favicon.ico
   upload: favicon\.ico
 
-- url: /toastie\.css
-  static_files: toastie.css
-  upload: toastie\.css
+- url: /bootstrap\.css
+  static_files: bootstrap.css
+  upload: bootstrap\.css
 
 - url: /.*
   script: search.app

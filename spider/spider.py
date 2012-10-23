@@ -1,13 +1,23 @@
 import requests
 import BeautifulSoup
-import time
+#import time
 import urlparse
-import google.appengine.ext
+from google.appengine.ext import db
 import itertools
 import re
 import robotparser
 
 URLList, linkCache, blacklist = [], {}, []
+
+#testing
+whitelist = ['127.0.0.1']
+
+class scrapeData(db.Model): #db schema
+    title = db.StringProperty()
+    text = db.TextProperty()
+    scrapeData = db.DateTimeProperty(auto_now_add=True)
+    parent = db.StringProperty()
+    rank = db.IntegerProperty()
 
 class URL():
     _instanceID = itertools.count(0)
@@ -20,8 +30,13 @@ class URL():
         headers = {'User-agent':'Toastie'}
         #check robots. If robots says no scanning, throw out page
         #robotcheck = requests.get(urlparse.urlparse(URL)[1]+/robots.txt')
-        self.request = requests.get(URL, headers=headers)
-        self.soup = BeautifulSoup.BeautifulSoup(self.request.text)
+
+        #testing
+        if urlparse.urlparse(self.URL)[1] in whitelist:
+            self.request = requests.get(URL, headers=headers)
+            self.soup = BeautifulSoup.BeautifulSoup(self.request.text)
+        else:
+            self.error = True
 
     def visibleElements(element):
         if element.parent.name in ['style', 'script', '[document]', 'head', 'title']:
@@ -34,13 +49,16 @@ class URL():
         self.title = self.soup.find('title').text
         self.text = self.soup.findAll(text=true)
         self.pageText = ''
+
         for item in filter(visibleElements, self.text):
             if item != '\n':
                 visibleText = visibleText+item
         self.pagelinks = []
+
         for link in soup.findAll('a'):
             self.pagelinks.append(link.get('href'))
         self.pagelinks.sort()
+
         for link in self.pagelinks:
             self.lastitem = self.pagelinks[-1]
             #determine if link is a duplicate of the previous. if so, throw it out.
@@ -49,9 +67,11 @@ class URL():
                     del self.pagelinks[i]
                 else:
                     self.lastitem = self.pagelinks[i]
+
             #determine if link is relative or absolute. if relative, change it to absolute
 
             #determine if link can be acquired by checking robots.txt
+            #if it cannot be acquired, throw out the url
 
             if link in linkCache:
                 if link in linkCache[self.URL]:
@@ -77,7 +97,7 @@ def main():
             print "An unexpected error occurred. Please try again. \nYour input must be a string that begins with http://"
         """
 
-        input = "http://localhost/~batman/"
+        input = "http://127.0.0.1/~batman/"
         #input = "http://buttbox:8002/~gabe/"
         break
     seedURL = input[:]

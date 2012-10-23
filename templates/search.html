@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<h2>{{ query }}</h2>
+
+<p class="text-error">{{ error }}</p>
+
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span2">
+    
+            {% include "sidebar.html" %}
+
+        </div>
+        <div class="span10">
+            {% for result in scrapeData %}
+                <article>
+                    <h3>&quot;{{ result.title }}&quot;</h3>
+                    <h4>Scanned on {{ result.scrapeDate }}</h4>
+                    <p>{{ result.Text }}</p> 
+                </article>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
