@@ -1,27 +1,30 @@
 import requests
 import BeautifulSoup
-#import time
 import urlparse
 import itertools
 import re
 import robotparser
 from pymongo import Connection
-from pymong.errors import ConnectionFailure
+from pymongo.errors import ConnectionFailure
 
 REQUEST_TIME_INCREMENT = 5
+SPIDER_USER_AGENT = 'Toastie'
 
 max_hops = 0
 max_frontiers = 0
 max_pages = None
 
-URLList, linkCache, blacklist = [], {}, []
+url_list, link_cache, black_list = [], {}, []
 
-class database():
-"""
-Initiates a database connection and sets up data insertion/querying
-"""
+class Database():
+    """
+    Initiates a database connection and sets up data insertion/querying
+    """
 
     def connect():
+        """
+        Establishes a database connection
+        """
         try:
             connection = Connection(host="localhost", port=27017)
         except ConnectionFailure, error:
@@ -29,24 +32,57 @@ Initiates a database connection and sets up data insertion/querying
             #sys.exit(1)
         self.dbc = connection["ex14"]
 
-    def set_user_doc(doc): #Pass in a dictionary
+    def set_user_doc(doc):
+        """
+        Record the document to that was passed in as a dictionary
+        """
         self.user_doc = doc
 
     def insert_doc():
+        """
+        Insert the document into the database
+        """
         if self.user_doc & self.dbc:
             dbc.scrapedata.insert(self.user_doc, safe=True)
 
 class URL():
     _instanceID = itertools.count(0)
 
-    def __init__(self, URL):
-        self.URL = URL
+    def __init__(self):
+        """
+        On initialization of a new url a count is added to the object
+        """
         self.count = self._instanceID.next()
 
-    def getPage(self):
-        headers = {'User-agent':'Toastie'}
+    def set_url(self, url):
+        """
+        A URL is passed in and the object's property url is set. If the URL
+        has already been scanned or is blacklisted then the object is flagged
+        to not be scanned.
+        """
+        #global url_list
+        self.url = url
+        if self.url not in url_list and self.url not in black_list:
+            self.need_to_be_scanned = True
+        else:
+            self.need_to_be_scanned = False
+
+    def page_robot_scannable(self):
+        """
+        Checks whether the page is allowed to be crawled
+        """
+        if self.needs_to_be_scanned is True:
+            pass
+
+        headers = {'User-agent':SPIDER_USER_AGENT}
         #check robots. If robots says no scanning, throw out page
         #robotcheck = requests.get(urlparse.urlparse(URL)[1]+/robots.txt')
+
+    def get_page(self):
+        """
+        The url is requested with a GET request if it hasn't yet been
+        """
+        #global SPIDER_USER_AGENT
 
         #testing
         if urlparse.urlparse(self.URL)[1] in whitelist:
@@ -55,14 +91,22 @@ class URL():
         else:
             self.error = True
 
-    def visibleElements(element):
+    def get_visible_elements(element):
+        """
+        Checks that the element is not contained in <style>, <script>, <head>,
+        <title> or [document]. It also cannot be commented out.
+        """
         if element.parent.name in ['style', 'script', '[document]', 'head', 'title']:
             return False
         elif re.match('<!--.*-->', str(element)):
             return False
         return True
 
-    def parsePage(self):
+    def parse_page(self):
+        """
+        This method parses the HTML page and extracts the title of the page,
+        the outgoing links, the number of outgoing links, and the text.
+        """
         self.title = self.soup.find('title').text
         self.text = self.soup.findAll(text=true)
         self.pageText = ''
@@ -98,6 +142,27 @@ class URL():
             else:
                 URLList.append(link)
                 linkCache[self.URL]=[link]
+
+    def reverse_index_page_text(self):
+        """
+        Iterates through the words in the page text and creates and adds them
+        to an index.
+        """
+        # This might take a really long time
+        pass
+
+    def set_page_scanned(self):
+        """
+        Once the page is scanned it is flagged as such
+        """
+        self.needs_to_be_scanned = False
+
+def page_rank():
+    """
+    Iterates through the crawled webpages and ranks them based on their link
+    structures.
+    """
+    pass
 
 def main():
     while 1:
@@ -149,7 +214,7 @@ def main():
     URLDir.append((URL(seedURL),NULL,0))
     linkCache.append(seedURL,NULL)
 
-    def URLProcess(input):
+    def process_url(input):
         input.getPage()
         if "error" not in dir(input):
             input.parsePage()
@@ -165,7 +230,7 @@ def main():
         if (item.hop > maxHops):
             break
         print "Page "+str(index),
-        URLProcess(item)
+        process_url(item)
 
     print 50*"#"
 
