@@ -4,6 +4,7 @@ import urlparse
 import itertools
 import re
 import robotparser
+from copy import deepcopy
 from pymongo import Connection
 from pymongo.errors import ConnectionFailure
 
@@ -167,7 +168,9 @@ def outgoing_links_to_pagerank(dictionary_of_outgoing_links):
                 pagerank[outgoing_url] = {}
                 pagerank[outgoing_url]['pagerank'] = 1
                 pagerank[outgoing_url]['incoming links'] = []
-            pagerank[outgoing_url]['incoming links'].append((item, len(dictionary_of_outgoing_links[item])))
+            pagerank[outgoing_url]['incoming links'].append(item)
+            #pagerank[outgoing_url]['incoming links'].append((item, len(dictionary_of_outgoing_links[item])))
+        pagerank[outgoing_url]['outgoing links'] = len(dictionary_of_outgoing_links[item])
     return pagerank
 
 def page_rank(crawled_sites_incoming_link_format, number_of_iterations):
@@ -179,11 +182,24 @@ def page_rank(crawled_sites_incoming_link_format, number_of_iterations):
     pagerank = crawled_sites_incoming_link_format
     while i is not 0:
         i-=1
+        pagerankprev = deepcopy(pagerank)
         for item in pagerank:
             subeqn = 0
-            for subitem in pagerank[item]['incoming links']:
-                subeqn += pagerank[pagerank[item]['incoming links'][0][0]]['pagerank'] / pagerank[item]['incoming links'][0][1]
+            for subitem, index in enumerate(pagerankprev[item]['incoming links']):
+                #print pagerankprev[item]['incoming links'][subitem][0]
+                #print 'numerator', pagerankprev[pagerankprev[item]['incoming links'][subitem][0]]['pagerank']
+                numerator = pagerankprev[pagerankprev[item]['incoming links'][subitem][0]]['pagerank']
+                #subeqn += float(pagerankprev[pagerankprev[item]['incoming links'][subitem][0]]['pagerank']) / float(len(pagerankprev[item]['incoming links']))
+                #subeqn += float(pagerankprev[pagerankprev[item]['incoming links'][subitem][0]]['pagerank'])
+                #print 'denominator', len(pagerankprev[item]['incoming links'])
+                #denominator = pagerankprev[item]['outgoing links']
+                denominator =  pagerankprev[pagerankprev[item]['incoming links'][subitem][0]]['outgoing links']
+                #print float(pagerankprev[pagerankprev[item]['incoming links'][0][0]]['pagerank']),
+                subeqn += float(numerator)/float(denominator)
+                #print numerator,'/',denominator
+            print subeqn
             pagerank[item]['pagerank'] = (1-PAGERANK_DAMPING) + (PAGERANK_DAMPING * subeqn)
+            #print item, pagerank[item]['pagerank'],'\n'
     return pagerank
 
     """

@@ -77,9 +77,13 @@ class SpiderTests(unittest.TestCase):
                                         'site2':[                  'site3'],
                                         'site3':['site1', 'site2'         ]}
 
-        expected_output = {'site1':{'incoming links':[                            ('site3', 2)], 'pagerank': 1},
-                           'site2':{'incoming links':[('site3', 2), ('site1', 2)              ], 'pagerank': 1},
-                           'site3':{'incoming links':[('site2', 1), ('site1', 2)              ], 'pagerank': 1}}
+        expected_output = {'site1':{'incoming links':[                  'site3'], 'outgoing links': 2, 'pagerank': 1},
+                           'site2':{'incoming links':['site3', 'site1'         ], 'outgoing links': 1, 'pagerank': 1},
+                           'site3':{'incoming links':['site2', 'site1'         ], 'outgoing links': 2, 'pagerank': 1}}
+
+#        expected_output = {'site1':{'incoming links':[                            ('site3', 2)], 'pagerank': 1},
+#                           'site2':{'incoming links':[('site3', 2), ('site1', 2)              ], 'pagerank': 1},
+#                           'site3':{'incoming links':[('site2', 1), ('site1', 2)              ], 'pagerank': 1}}
         self.assertEqual(outgoing_links_to_pagerank(dictionary_of_outgoing_links), expected_output), "Conversion from outgoing link format to incoming link format failed."
 
 
@@ -88,11 +92,11 @@ class SpiderTests(unittest.TestCase):
         Test the results coming out of the pagerank algorithm
         """
 
-        expected_input = {'site1':{'incoming links':[                            ('site3', 2)], 'pagerank': 1},
-                          'site2':{'incoming links':[('site3', 2), ('site1', 2)              ], 'pagerank': 1},
-                          'site3':{'incoming links':[('site2', 1), ('site1', 2)              ], 'pagerank': 1}}
+        expected_input = {'site1':{'outgoing links': 2, 'incoming links':[                            ('site3', 2)], 'pagerank': 1},
+                          'site2':{'outgoing links': 1, 'incoming links':[('site3', 2), ('site1', 2)              ], 'pagerank': 1},
+                          'site3':{'outgoing links': 2, 'incoming links':[('site2', 1), ('site1', 2)              ], 'pagerank': 1}}
 
-        print page_rank(expected_input, 1)
+        page_rank(expected_input, 1)
         #self.assertEqual(page_rank(expected_input, 1), {'site1':0.575, 'site2':1, 'site3':1.425}), "Pagerank output round 1 incorrect"
         #self.assertEqual(page_rank(expected_input, 2)), {'site1':0.755625, 'site2':1, 'site3':1.244375}, "Pagerank output round 2 incorrect"
         #self.assertEqual(page_rank(expected_input, 3)), {'site1':0.678859375, 'site2':1, 'site3':1.321140625}, "Pagerank output round 3 incorrect"
