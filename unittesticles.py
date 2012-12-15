@@ -51,22 +51,7 @@ class SpiderTests(unittest.TestCase):
         self.beepboop.set_url(theurl)
         self.assertEqual(self.beepboop.need_to_be_scanned, False), "Previous scanned URL should not be scannable, but was shown to be scannable"
 
-#    def test_outgoing_links_to_pagerank_format(self):
-#        """
-#        Test the mechanism for converting a dictionary of urls and their
-#        outgoing links to a dictionary of urls, their incoming links, and
-#        the number of links on each incoming links' page
-#        """
-#        dictionary_of_outgoing_links = {'www.google.com':['link1', 'link2', 'link3'],
-#                                        'www.yahoo.com':          ['link2', 'link3']}
-#        expected_output = {'link1':{'incoming links':[                      ('www.google.com', 3)], 'pagerank':1},
-#                           'link2':{'incoming links':[('www.yahoo.com', 2), ('www.google.com', 3)], 'pagerank':1},
-#                           'link3':{'incoming links':[('www.yahoo.com', 2), ('www.google.com', 3)], 'pagerank':1}}
-#
-#        #print outgoing_links_to_pagerank(dictionary_of_outgoing_links) #== expected_output
-#        self.assertEqual(outgoing_links_to_pagerank(dictionary_of_outgoing_links), expected_output), "Conversion from outgoing link format to incoming link format failed."
-
-    def test_outgoing_links_to_pagerank_format2(self):
+    def test_outgoing_links_to_pagerank_format(self):
         """
         Test the mechanism for converting a dictionary of urls and their
         outgoing links to a dictionary of urls, their incoming links, and
@@ -91,6 +76,10 @@ class SpiderTests(unittest.TestCase):
         unrounded floats, however they are consideredequivalent values for our
         search engine purposes
         """
+
+        #expected_input = {'site1':{'outgoing links': 2, 'incoming links':[                            ('site3', 2)], 'pagerank': 1},
+        #                  'site2':{'outgoing links': 1, 'incoming links':[('site3', 2), ('site1', 2)              ], 'pagerank': 1},
+        #                  'site3':{'outgoing links': 2, 'incoming links':[('site2', 1), ('site1', 2)              ], 'pagerank': 1}}
 
         expected_input = {'site1':{'outgoing links': 2, 'incoming links':[                            ('site3', 2)], 'pagerank': 1},
                           'site2':{'outgoing links': 1, 'incoming links':[('site3', 2), ('site1', 2)              ], 'pagerank': 1},

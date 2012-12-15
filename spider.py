@@ -186,13 +186,8 @@ def page_rank(crawled_sites_incoming_link_format, number_of_iterations):
         for item in pagerank:
             subeqn = 0
             for subitem, index in enumerate(pagerankprev[item]['incoming links']):
-                numerator = pagerankprev[pagerankprev[item]['incoming links'][subitem][0]]['pagerank']
-                denominator =  pagerankprev[pagerankprev[item]['incoming links'][subitem][0]]['outgoing links']
-                subeqn += float(numerator)/float(denominator)
-                #print numerator,'/',denominator
-            print 0.15+subeqn*0.85
-            pagerank[item]['pagerank'] = 0.15+subeqn*0.85
-            #print item, pagerank[item]['pagerank'],'\n'
+                subeqn += float(pagerankprev[pagerankprev[item]['incoming links'][subitem][0]]['pagerank']) / float(pagerankprev[pagerankprev[item]['incoming links'][subitem][0]]['outgoing links'])
+            pagerank[item]['pagerank'] = (1-PAGERANK_DAMPING)+subeqn*(PAGERANK_DAMPING)
     pagerankprev = {}
     for item in pagerank:
         pagerankprev[item] = pagerank[item]['pagerank']
