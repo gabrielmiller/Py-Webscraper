@@ -169,8 +169,8 @@ def outgoing_links_to_pagerank(dictionary_of_outgoing_links):
                 pagerank[outgoing_url]['pagerank'] = 1
                 pagerank[outgoing_url]['incoming links'] = []
             pagerank[outgoing_url]['incoming links'].append(item)
-            #pagerank[outgoing_url]['incoming links'].append((item, len(dictionary_of_outgoing_links[item])))
-        pagerank[outgoing_url]['outgoing links'] = len(dictionary_of_outgoing_links[item])
+    for item in pagerank:
+        pagerank[item]['number of outgoing links'] = len(dictionary_of_outgoing_links[item])
     return pagerank
 
 def page_rank(crawled_sites_incoming_link_format, number_of_iterations):
