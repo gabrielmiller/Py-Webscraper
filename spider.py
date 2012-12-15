@@ -2,18 +2,33 @@ import requests
 import BeautifulSoup
 #import time
 import urlparse
-from google.appengine.ext import db
 import itertools
 import re
 import robotparser
+from pymongo import Connection
+from pymong.errors import ConnectionFailure
 
 URLList, linkCache, blacklist = [], {}, []
 
-#testing
-whitelist = ['127.0.0.1']
+class database():
+"""
+Initiates a database connection and sets up data insertion/querying
+"""
 
-def test():
-    return "hi!"
+    def connect():
+        try:
+            connection = Connection(host="localhost", port=27017)
+        except ConnectionFailure, error:
+            return "Could not connect to database: %s" % error
+            #sys.exit(1)
+        self.dbc = connection["ex14"]
+
+    def set_user_doc(doc): #Pass in a dictionary
+        self.user_doc = doc
+
+    def insert_doc():
+        if self.user_doc & self.dbc:
+            dbc.scrapedata.insert(self.user_doc, safe=True)
 
 class URL():
     _instanceID = itertools.count(0)
@@ -152,17 +167,4 @@ def main():
 """
 if __name__ == "__main__":
     main()
-"""
-
-"""
-database schema:
-    table: websites
-    url:    varchar(255)
-    inside_hitcounts: int(16)
-    outside_hitcounts: int(16)
-    rank: int(2)
-    title:  varchar(255)
-    meta:   varchar(1024)
-    page:   varchar(65536)
-    date:   datetime
 """
