@@ -179,12 +179,28 @@ def page_rank(crawled_sites_incoming_link_format, number_of_iterations):
     pagerank = crawled_sites_incoming_link_format
     while i is not 0:
         i-=1
-        for item in crawled_sites_incoming_link_format:
-            for twotuple in crawled_sites_incoming_link_format[item]:
-                if not pagerank_output.get(item[0]): #First iteration of pagerank
-                    pagerank_output[item[0]] = (1-PAGERANK_DAMPING) * ((PAGERANK_DAMPING))
-                else: #Subsequent iterations of pagerank
-                    pagerank_output[item[0]] = 0 ###
+        for item in pagerank:
+            subeqn = 0
+            for subitem in pagerank[item]['incoming links']:
+                subeqn += pagerank[pagerank[item]['incoming links'][0][0]]['pagerank'] / pagerank[item]['incoming links'][0][1]
+            pagerank[item]['pagerank'] = (1-PAGERANK_DAMPING) + (PAGERANK_DAMPING * subeqn)
+    return pagerank
+
+    """
+    for item in expected_input:
+        print item, '0.15 + 0.85 * (',
+        for subitem in expected_input[item]['incoming links']:
+            print '(', expected_input[expected_input[item]['incoming links'][0][0]]['pagerank'],'/',expected_input[item]['incoming links'][0][1],') +',
+        print ') \n'
+    """
+
+    """
+        for twotuple in pagerank[item]:
+            if not pagerank_output.get(item[0]): #First iteration of pagerank
+                pagerank_output[item[0]] = (1-PAGERANK_DAMPING) * ((PAGERANK_DAMPING))
+            else: #Subsequent iterations of pagerank
+                pagerank_output[item[0]] = 0 ###
+    """
 
 def main():
     while 1:
