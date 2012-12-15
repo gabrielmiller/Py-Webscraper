@@ -17,12 +17,14 @@
 
 {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
+<br><br>
 <div class="row">
-    <div class="offset2 span6">
+    <div style="text-align:center;">
             {% for category, message in messages %}
                 <p class="{{ category }}">{{ message }}</p>
             {% endfor %}
     </div>
+<br><br>
 </div>
 <div class="row">
     {% endif %}
@@ -36,7 +38,7 @@
 </div>
 <br><br><br><br>
 <div class="navbar navbar-fixed-bottom" style="text-align: center;">
-<p>Check the <a href="/spider{% if context.query %}?query={{ context.query}}&display={{ context.display }}&sort={{ context.sort }}{% endif %}">spider</a></p>
+<p>Check the <a href="/spider{% if context and context.query %}?query={{ context.query}}&display={{ context.display }}&sort={{ context.sort }}&page={{ context.page }}&results={{ context.results }}{% endif %}">spider</a></p>
 <p>&copy; 2012 <a href="http://www.cheddarcode.com/g/">L Gabriel Miller</a></p>
 </div>
 </body>

@@ -6,18 +6,18 @@ This module contains the routing and logic for the search front-end side of
 this website
 """
 
-def get_query_string():
+def get_query_string(input=None):
     """
     This function checks the querystring for the parameter "query" and returns its
     value if present. If that parameter is not present it returns null.
     """
-    if request.args.get('query'):
+    if input:
         context = dict()
-        context['query'] = request.args.get('query')
-        context['sort'] = request.args.get('sort')
-        context['display'] = request.args.get('display')
-        context['page'] = request.args.get('page')
-        context['results'] = request.args.get('results')
+        context['query'] = input.get('query')
+        context['sort'] = input.get('sort')
+        context['display'] = input.get('display')
+        context['page'] = input.get('page')
+        context['results'] = input.get('results')
         return context
     else:
         return None
@@ -34,15 +34,14 @@ def frontpage():
     """
     Renders the search splash page.
     """
-    context = get_query_string()
-    return render_template("frontpage.html", context=context)
+    return render_template("frontpage.html")
 
 @app.route("/search")
 def search():
     """
     Renders the search results page.
     """
-    context = get_query_string()
+    context = get_query_string(request.args)
     return render_template("search.html", context=context)
 
 @app.route("/spider")
@@ -50,5 +49,13 @@ def spider():
     """
     Renders the spider dashboard page.
     """
-    context = get_query_string()
+    context = get_query_string(request.args)
     return render_template("spider.html", context=context)
+
+@app.route("/addspider", methods=['POST'])
+def addspider():
+    """
+    Post requests to this url will add a spider.
+    """
+    flash('Error: Adding spiders is not yet implemented. Try again later!', category='text-error')
+    return redirect(url_for('frontpage'))

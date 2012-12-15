@@ -13,11 +13,11 @@
         <option value="0"{% if context.display == "0" %} selected {% endif %}>Title, snippet</option>
         <option value="1"{% if context.display == "1" %} selected {% endif %}>Title, snippet, date</option>
         <option value="2"{% if context.display == "2" %} selected {% endif %}>Preview, date</option>
-        <option value="3"{% if context.diplay == "3" %} selected {% endif %}>Flavor</option>
+        <option value="3"{% if context.display == "3" %} selected {% endif %}>Flavor</option>
     </select>
 
     <p>Results per page</p>
-    <select class="input-block-level" name="display">
+    <select class="input-block-level" name="results">
         <option value="10"{% if context.results == "10" %} selected {% endif %}>10</option>
         <option value="25"{% if context.results == "25" %} selected {% endif %}>25</option>
         <option value="100"{% if context.results == "100" %} selected {% endif %}>100</option>

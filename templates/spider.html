@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-- Spider'
+- Spider Settings
 {% endblock %}
 
 {% block body %}
@@ -10,6 +10,7 @@
 
 <div class="row">
     <div class="span2" id="sidebar">
+        <p><a href="/search{% if context.query %}?query={{ context.query}}&display={{ context.display }}&sort={{ context.sort }}&page={{ context.page }}&results={{ context.results }}{% endif %}">Back to Search</a></p>
         <p><a href="#addseed">Add a seed</a></p>
         <p><a href="#seedlist">Previous Seeds</a></p>
         <p><a href="#recentscrapes">Recent scrapes</a></p>
@@ -19,25 +20,40 @@
 
         <h3>Spider settings:</h3>
         <h5 id="addseed">Add a seed: </h5>
-        <form class="form-search" action="POST" name="seed">
-            <div class="">
-                <input type="text" name="seedurl" placeholder="http://www.website.com" value="http://localhost:8001" class="input-xlarge ">
+        <form class="form-horizontal" method="POST" action="/addspider" name="seed">
+            <div class="control-group">
+                <label class="control-label" for="seedurl">Seed URL: </label>
+                <div class="controls">
+                    <input type="text" name="seedurl" placeholder="http://www.website.com" value="http://localhost:8001" class="span5">
+                </div>
             </div>
-            <div class="">
-                <input type="text" name="frontiers" placeholder="#" placeholder="Number of frontiers" class="input-xlarge" value="3">
+            <div class="control-group">
+                <label class="control-label" for="frontiers">Maximum frontiers: </label>
+                <div class="controls">
+                    <input type="text" name="frontiers" placeholder="#" placeholder="Number of frontiers" class="span1" value="3">
+                </div>
             </div>
-            <div class="">
-                <label></label>
-                <input id="" name="maxpages" type="text" placeholder="#" placeholder="Maximum number of pages" class="input-xlarge" value="500">
+            <div class="control-group">
+                <label class="control-label" for="maxpages">Maximum pages: </label>
+                <div class="controls">
+                    <input id="" name="maxpages" type="text" placeholder="#" placeholder="Maximum number of pages" class="span1" value="500">
+                </div>
             </div>
-            <button type="submit" class="btn">Submit</button>
+            <div class="control-group">
+                <div class="controls">
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </div>
+            </div>
         </form>
 
             <h5 id="seedlist">Previously Submitted Seeds: </h5>
+            <p>This section will eventually display a list of the most recently submitted 10 or so seeds.</p>
 
             <h5 id="recentscrapes">Recently Scraped Websites: </h5>
+            <p>This section will eventually display a list of the urls and titled of the most recently scraped 10 or so pages.</p>
 
             <h5 id="archives">Archive Statistics: </h5>
+            <p>This section will eventually display numbers of the how many pages have been spidered, how many requests were sent, how long the spider script has run, how large the database is, how long the longest page is, how short the shortest page is, etc..</p>
 
     </div>
 
