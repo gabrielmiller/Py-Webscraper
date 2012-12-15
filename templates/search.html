@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}
+- Search for '{{ context.query }}'
+{% endblock %}
+
+{% block body %}
+
+{% include "include_search.html" %}
+
+<div class="row">
+    <div id="sidebar" class="span2">
+        {% include "include_sidebar.html" %}
+    </div>
+    <div id="content" class="span10">
+
+        <h3>Search results for {{ context.query }}:</h3>
+
+        <!-- Iterate through search results and paginate -->
+
+    </div>
+
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}
+- Spider'
+{% endblock %}
+
+{% block body %}
+
+{% include "include_search.html" %}
+
+<div class="row">
+    <div class="span2" id="sidebar">
+        <p><a href="#addseed">Add a seed</a></p>
+        <p><a href="#seedlist">Previous Seeds</a></p>
+        <p><a href="#recentscrapes">Recent scrapes</a></p>
+        <p><a href="#archives">Archive Statistics</a></p>
+    </div>
+    <div class="span10" id="content">
+
+        <h3>Spider settings:</h3>
+        <h5 id="addseed">Add a seed: </h5>
+        <form class="form-search" action="POST" name="seed">
+            <div class="">
+                <input type="text" name="seedurl" placeholder="http://www.website.com" value="http://localhost:8001" class="input-xlarge ">
+            </div>
+            <div class="">
+                <input type="text" name="frontiers" placeholder="#" placeholder="Number of frontiers" class="input-xlarge" value="3">
+            </div>
+            <div class="">
+                <label></label>
+                <input id="" name="maxpages" type="text" placeholder="#" placeholder="Maximum number of pages" class="input-xlarge" value="500">
+            </div>
+            <button type="submit" class="btn">Submit</button>
+        </form>
+
+            <h5 id="seedlist">Previously Submitted Seeds: </h5>
+
+            <h5 id="recentscrapes">Recently Scraped Websites: </h5>
+
+            <h5 id="archives">Archive Statistics: </h5>
+
+    </div>
+
+</div>
+
+
+{% endblock %}

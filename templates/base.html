@@ -4,32 +4,41 @@
 <head>
     <title>Toastie{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="static/css/bootstrap.css">
-    <link rel="shortcut icon" href="{{ url_for('assets', filename='favicon.ico') }}">
-    <script src="static/js/bootstrap.js"></script>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <script src="static/js/jquery-1.8.2.js"></script>
-    <script src="static/js/jquery-ui-1.9.1.custom.js"></script>
+    <script src="static/js/holder.js"></script>
+    <script src="static/js/bootstrap.js"></script>
+    <!--<script src="static/js/jquery-ui-1.9.1.custom.js"></script>-->
 </head>
 
 <body>
 
-<div class="row-fluid">
-{% with messages = get_flash_messages(with_categories=true) %}
+<div class="container">
+
+{% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
+<div class="row">
+    <div class="offset2 span6">
             {% for category, message in messages %}
                 <p class="{{ category }}">{{ message }}</p>
             {% endfor %}
+    </div>
 </div>
-<div class="row-fluid">
+<div class="row">
     {% endif %}
 {% endwith %}
 
 {% block body %}
 {% endblock %}
 
+<br>
+
 </div>
-
-<div id="footer">&copy; 2012 <a href="http://www.cheddarcode.com/g/">L Gabriel Miller</a></p>
-
+<br><br><br><br>
+<div class="navbar navbar-fixed-bottom" style="text-align: center;">
+<p>Check the <a href="/spider{% if context.query %}?query={{ context.query}}&display={{ context.display }}&sort={{ context.sort }}{% endif %}">spider</a></p>
+<p>&copy; 2012 <a href="http://www.cheddarcode.com/g/">L Gabriel Miller</a></p>
+</div>
 </body>
 
 </html>

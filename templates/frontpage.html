@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}
+- The Unhelpful Search Engine
+{% endblock %}
+
+{% block body %}
+
+<div class="span8 offset2">
+    <div class="row">
+        <img data-src="holder.js/100%x240/industrial">
+    </div>
+    <div class="row">
+        <form class="form-search" method="GET" action="/search">
+            <input type="text" class="input-xxlarge" name="query" placeholder="Toast it!">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

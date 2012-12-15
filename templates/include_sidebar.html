@@ -1,0 +1,57 @@
+<form method="GET" action="/search">
+    <h4>Options:</h4>
+    <p>Sort order: </p>
+    <select class="input-block-level" name="sort">
+        <option value="rel"{% if context.sort == "rel" %} selected {% endif %}>Relevancy</option>
+        <option value="dat"{% if context.sort == "dat" %} selected {% endif %}>Scrape Date</option>
+        <option value="len"{% if context.sort == "len" %} selected {% endif %}>Page length</option>
+        <option value="cha"{% if context.sort == "cha" %} selected {% endif %}>Chaos</option>
+    </select>
+
+    <p>Display:</p>
+    <select class="input-block-level" name="display">
+        <option value="0"{% if context.display == "0" %} selected {% endif %}>Title, snippet</option>
+        <option value="1"{% if context.display == "1" %} selected {% endif %}>Title, snippet, date</option>
+        <option value="2"{% if context.display == "2" %} selected {% endif %}>Preview, date</option>
+        <option value="3"{% if context.diplay == "3" %} selected {% endif %}>Flavor</option>
+    </select>
+
+    <p>Results per page</p>
+    <select class="input-block-level" name="display">
+        <option value="10"{% if context.results == "10" %} selected {% endif %}>10</option>
+        <option value="25"{% if context.results == "25" %} selected {% endif %}>25</option>
+        <option value="100"{% if context.results == "100" %} selected {% endif %}>100</option>
+    </select> 
+    <input style="display:none;" name="query" value="{{ context.query }}">
+
+    <button class="btn input-block-level">Set options</button>
+</form>
+
+<!--<button id="button_h" class="btn input-block-level">???</button>-->
+<button id="button_q" class="btn input-block-level">Hide Sidebar</button>
+
+<script type="text/javascript">
+$("#button_q").click(function()
+{
+    $("#sidebar").hide();
+    $("#content").removeClass("span10");
+    $("#content").addClass("span12");
+});
+$("#button_h").click(function()
+{
+    var eventnum = Math.floor((Math.random()*2)+1);
+    //console.log("event number is " + eventnum)
+    $("#button_h").hide();
+    // Fire off the event
+    switch(eventnum)
+    {
+    case 1:
+        // Fire event 1
+    case 2:
+        // Fire event 2
+        // jQuery physics
+        // http://news.ycombinator.com/item?id=4903716
+
+    }
+});
+</script>
