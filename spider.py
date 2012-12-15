@@ -9,6 +9,8 @@ from pymongo.errors import ConnectionFailure
 
 REQUEST_TIME_INCREMENT = 5
 SPIDER_USER_AGENT = 'Toastie'
+PAGERANK_ITERATIONS = 30
+PAGERANK_DAMPING = 0.85
 
 max_hops = 0
 max_frontiers = 0
@@ -45,7 +47,7 @@ class Database():
         if self.user_doc & self.dbc:
             dbc.scrapedata.insert(self.user_doc, safe=True)
 
-class URL():
+class Webpage():
     _instanceID = itertools.count(0)
 
     def __init__(self):
@@ -85,8 +87,8 @@ class URL():
         #global SPIDER_USER_AGENT
 
         #testing
-        if urlparse.urlparse(self.URL)[1] in whitelist:
-            self.request = requests.get(URL, headers=headers)
+        if urlparse.urlparse(self.url)[1] in whitelist:
+            self.request = requests.get(url, headers=headers)
             self.soup = BeautifulSoup.BeautifulSoup(self.request.text)
         else:
             self.error = True
@@ -111,9 +113,9 @@ class URL():
         self.text = self.soup.findAll(text=true)
         self.pageText = ''
 
-        for item in filter(visibleElements, self.text):
+        for item in filter(get_visible_elements, self.text):
             if item != '\n':
-                visibleText = visibleText+item
+                visibleText+= item
         self.pagelinks = []
 
         for link in soup.findAll('a'):
@@ -135,13 +137,13 @@ class URL():
             #if it cannot be acquired, throw out the url
 
             if link in linkCache:
-                if link in linkCache[self.URL]:
+                if link in linkCache[self.url]:
                     pass
                 else:
-                    linkCache[self.URL].append(link)
+                    linkCache[self.url].append(link)
             else:
-                URLList.append(link)
-                linkCache[self.URL]=[link]
+                url_list.append(link)
+                linkCache[self.url]=[link]
 
     def reverse_index_page_text(self):
         """
@@ -157,12 +159,33 @@ class URL():
         """
         self.needs_to_be_scanned = False
 
-def page_rank():
+def outgoing_links_to_pagerank(dictionary_of_outgoing_links):
+    pagerank = {}
+    for item in dictionary_of_outgoing_links:
+        for outgoing_url in dictionary_of_outgoing_links[item]:
+            if not pagerank.get(outgoing_url):
+                pagerank[outgoing_url] = {}
+                pagerank[outgoing_url]['pagerank'] = 1
+                pagerank[outgoing_url]['incoming links'] = []
+            pagerank[outgoing_url]['incoming links'].append((item, len(dictionary_of_outgoing_links[item])))
+    return pagerank
+
+def page_rank(crawled_sites_incoming_link_format, number_of_iterations):
     """
     Iterates through the crawled webpages and ranks them based on their link
     structures.
     """
-    pass
+    pagerank_output = crawled_sites_incoming_link_format
+    i = 1
+    #i = PAGERANK_ITERATIONS
+    while i is not 0:
+        i-=1
+        for item in crawled_sites_incoming_link_format:
+            for twotuple in crawled_sites_incoming_link_format[item]:
+                if not pagerank_output.get(item[0]): #First iteration of pagerank
+                    pagerank_output[item[0]] = (1-PAGERANK_DAMPING) * ((PAGERANK_DAMPING))
+                else: #Subsequent iterations of pagerank
+                    pagerank_output[item[0]] = 0 ###
 
 def main():
     while 1:
@@ -223,7 +246,7 @@ def main():
         print "hop="+str(input.hop), "instance="+str(input), "len(URLDir)="+str(len(URLDir)), "URL="+input.URL
 
     for index, item in enumerate(URLDir):
-        if urlparse.urlparse(item.URL)[1] != "buttbox:8002":   #local testing
+        if urlparse.urlparse(item.url)[1] != "buttbox:8002":   #local testing
             continue
         if (index > maxFrontiers):
             break
