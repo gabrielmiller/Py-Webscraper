@@ -8,6 +8,12 @@ import robotparser
 from pymongo import Connection
 from pymong.errors import ConnectionFailure
 
+REQUEST_TIME_INCREMENT = 5
+
+max_hops = 0
+max_frontiers = 0
+max_pages = None
+
 URLList, linkCache, blacklist = [], {}, []
 
 class database():
