@@ -175,9 +175,8 @@ def page_rank(crawled_sites_incoming_link_format, number_of_iterations):
     Iterates through the crawled webpages and ranks them based on their link
     structures.
     """
-    pagerank_output = crawled_sites_incoming_link_format
-    i = 1
-    #i = PAGERANK_ITERATIONS
+    i = number_of_iterations
+    pagerank = crawled_sites_incoming_link_format
     while i is not 0:
         i-=1
         for item in crawled_sites_incoming_link_format:
