@@ -146,23 +146,22 @@ class SpiderTests(unittest.TestCase):
     def test_pagerank_with_an_unscanned_site(self):
         """
         Test the results coming out of the pagerank algorithm.
-        Note: the results of this assert do not pass unit test because they are
-        unrounded floats, however they are equivalent enough values for our
-        search engine purposes.
-        """
+        To deal with unscanned but referenced webpages the
+        program adds an entry and assumes 1 incoming link.
 
+        The two inputs below should have identical output.
+        """
         input3 = {'site1':[         'site2', 'site3', 'site4'],
                   'site2':[                  'site3'],
                   'site3':['site1', 'site2'         ]}
 
-        print page_rank(outgoing_links_to_pagerank(input3), 1)
+        input4 = {'site1':[         'site2', 'site3', 'site4'],
+                  'site2':[                  'site3'],
+                  'site3':['site1', 'site2'         ],
+                  'site4':[                         ]} #This would cause a division by zero but is forced to have a length of 1
 
-        #input2 =  {'site1':{'incoming links':[                  'site3'], 'number of outgoing links': 3, 'pagerank': 1}, #outgoing link to site4
-        #           'site2':{'incoming links':['site3', 'site1'         ], 'number of outgoing links': 1, 'pagerank': 1},
-        #           'site3':{'incoming links':['site2', 'site1'         ], 'number of outgoing links': 2, 'pagerank': 1}}
-
-        #print page_rank(input2, 1)
-        #self.assertEqual(page_rank(expected_input, 3), {'site1':0.678859375, 'site2':1.0, 'site3':1.321140625}), "Pagerank output round 3 incorrect"
+        a_random_number = randint(0,1000)
+        self.assertEqual(page_rank(outgoing_links_to_pagerank(input3), a_random_number), page_rank(outgoing_links_to_pagerank(input4), a_random_number)), "Unscanned site pagerank is incorrect"
 
     def tearDown(self):
         """
