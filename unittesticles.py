@@ -46,9 +46,9 @@ class SpiderTests(unittest.TestCase):
         """
         Is a previously scanned page correctly flagged to not be scanned?
         """
-        theurl = "http://www.google.com"
-        url_list.append(theurl)
-        self.beepboop.set_url(theurl)
+        theurl2 = "http://www.google.com"
+        url_list.append(theurl2)
+        self.beepboop.set_url(theurl2)
         self.assertEqual(self.beepboop.need_to_be_scanned, False), "Previous scanned URL should not be scannable, but was shown to be scannable"
 
     def test_outgoing_links_to_pagerank_format(self):

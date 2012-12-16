@@ -1,9 +1,10 @@
 import requests
-import BeautifulSoup
 import urlparse
 import itertools
 import re
 import robotparser
+from BeautifulSoup import BeautifulSoup
+from time import sleep
 from copy import deepcopy
 from pymongo import Connection
 from pymongo.errors import ConnectionFailure
@@ -49,6 +50,11 @@ class Database():
             dbc.scrapedata.insert(self.user_doc, safe=True)
 
 class Webpage():
+    """
+    Objects that refer to individual webpages. If the url is scrapeable the
+    object will be filled with that data and inserted into a database for
+    searching.
+    """
     _instanceID = itertools.count(0)
 
     def __init__(self):
@@ -75,26 +81,26 @@ class Webpage():
         Checks whether the page is allowed to be crawled
         """
         if self.needs_to_be_scanned is True:
+            headers = {'User-agent':SPIDER_USER_AGENT}
+            self.urlparse = urlparse.urlparse(self.url)
             pass
 
-        headers = {'User-agent':SPIDER_USER_AGENT}
         #check robots. If robots says no scanning, throw out page
         #robotcheck = requests.get(urlparse.urlparse(URL)[1]+/robots.txt')
 
     def get_page(self):
         """
-        The url is requested with a GET request if it hasn't yet been
+        The url is requested with a GET request. The page html is scraped
+        directly, while elements of it are scraped in parse_page
         """
-        #global SPIDER_USER_AGENT
-
-        #testing
-        if urlparse.urlparse(self.url)[1] in whitelist:
+        headers = {'User-agent':SPIDER_USER_AGENT}
+        try:
             self.request = requests.get(self.url, headers=headers)
-            self.soup = BeautifulSoup.BeautifulSoup(self.request.text)
-        else:
-            self.error = True
+            self.pagehtml = BeautifulSoup(self.request.text)
+        except:
+            raise Exception
 
-    def get_visible_elements(element):
+    def get_visible_elements(self, element):
         """
         Checks that the element is not contained in <style>, <script>, <head>,
         <title> or [document]. It also cannot be commented out.
@@ -110,49 +116,24 @@ class Webpage():
         This method parses the HTML page and extracts the title of the page,
         the outgoing links, the number of outgoing links, and the text.
         """
-        self.title = self.soup.find('title').text
-        self.text = self.soup.findAll(text=true)
-        self.pageText = ''
+        self.title = self.pagehtml.find('title').text
+        self.page_text = self.pagehtml.findAll(text=true)
 
-        for item in filter(get_visible_elements, self.text):
+        for item in filter(get_visible_elements, self.pagetext):
             if item != '\n':
-                visibleText+= item
+                self.pagetext+= item
         self.pagelinks = {}
 
         for link in soup.findAll('a'):
-            #self.pagelinks.append(link.get('href'))
-            self.pagelinks[link.get('href')
-        self.pagelinks.sort()
+            self.pagelinks[link.get('href')] = 1
 
-        for link in self.pagelinks:
-            self.lastitem = self.pagelinks[-1]
-            #determine if link is a duplicate of the previous. if so, throw it out.
-            for i in range(len(self.pagelinks) - 2, -1, -1):
-                if self.lastitem == self.pagelinks[i]:
-                    del self.pagelinks[i]
-                else:
-                    self.lastitem = self.pagelinks[i]
+        for link in self.pagehtml:
+            pass
 
-            #determine if link is relative or absolute. if relative, change it to absolute
+        # determine if link is relative or absolute. if relative, change it to absolute
 
-            #determine if link can be acquired by checking robots.txt
-            #if it cannot be acquired, throw out the url
-
-            if link in linkCache:
-                if link in linkCache[self.url]:
-                    pass
-                else:
-                    linkCache[self.url].append(link)
-            else:
-                url_list.append(link)
-                linkCache[self.url]=[link]
-
-    def get_page_links(self):
-        """
-        This method returns all of the unique urls scraped from a page. If no
-        urls are present it returns null.
-        """
-        return self.pagelinks
+        # determine if link can be acquired by checking robots.txt
+        # if it cannot be acquired, throw out the url
 
     def reverse_index_page_text(self):
         """
@@ -215,23 +196,23 @@ def main():
         item.set_url(url=seed)
         if item.need_to_be_scanned is True:
             item.get_page()
-            item.get_visible_elements()
             item.parse_parge()
-            item.get_page_links()
             item.reverse_index_page()
             item.set_page_scanned()
         else:
             item.set_page_scanned()
+        sleep(REQUEST_TIME_INCREMENT)
 
     dictionary_of_outgoing_links = {}
 
     for item in url_list:
-        if item.title and item.pagehtml:
+        if item.pagehtml:
             dictionary_of_outgoing_links[item.url] = item.pagelinks
 
     page_rank(outgoing_links_to_pagerank(dictionary_of_outgoing_links), PAGERANK_ITERATIONS)
 
     # Connect to database, submit records for each webpage: url, title, pagehtml, pagetext, outgoinglinks, num_outgoinglinks, incominglinks
+    # Submit reverse index data to database
 
     """
 
