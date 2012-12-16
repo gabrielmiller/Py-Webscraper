@@ -84,7 +84,7 @@ class Webpage():
     def get_page(self):
         """
         The url is requested with a GET request. The page html is scraped
-        directly, while elements of it are scraped in parse_page
+        directly, while elements of it aee scraped in parse_page
         """
         headers = {'User-agent':SPIDER_USER_AGENT}
         try:
@@ -156,7 +156,17 @@ def outgoing_links_to_pagerank(dictionary_of_outgoing_links):
                 pagerank[outgoing_url]['incoming links'] = []
             pagerank[outgoing_url]['incoming links'].append(item)
     for item in pagerank:
-        pagerank[item]['number of outgoing links'] = len(dictionary_of_outgoing_links[item])
+        try:
+            pagerank[item]['number of outgoing links'] = len(dictionary_of_outgoing_links[item])
+        except KeyError: #This is a bandaid solution to pages that are referenced but weren't scanned
+            print item
+            pagerank[item] = {'number of outgoing links': 1, 'incoming links':[]}
+            for subitem in pagerank:
+                try:
+                    if item in dictionary_of_outgoing_links[subitem]:
+                        pagerank[item]['incoming links'].append(subitem)
+                except:
+                    pass
     return pagerank
 
 def page_rank(crawled_sites_incoming_link_format, number_of_iterations):
@@ -174,7 +184,11 @@ def page_rank(crawled_sites_incoming_link_format, number_of_iterations):
             # For each url of an incoming site, that site is traversed for its pagerank and number of outgoing links
             # The iteration below runs once for every incoming url to a page(one for every arrow head in a graph)
             for index, subitem in enumerate(pagerankprev[item]['incoming links']):
-                subeqn += float(pagerankprev[pagerankprev[item]['incoming links'][index]]['pagerank']) / float(pagerankprev[pagerankprev[item]['incoming links'][index]]['number of outgoing links'])
+                try:
+                    subeqn += float(pagerankprev[pagerankprev[item]['incoming links'][index]]['pagerank']) / float(pagerankprev[pagerankprev[item]['incoming links'][index]]['number of outgoing links'])
+                except KeyError: #This is a bandaid solution to pages that are referenced but weren't scanned
+                    pagerankprev[subitem] = {'pagerank':1, 'number of outgoing links': 1, 'incoming links':item}
+                    subeqn += float(pagerankprev[pagerankprev[item]['incoming links'][index]]['pagerank']) / float(pagerankprev[pagerankprev[item]['incoming links'][index]]['number of outgoing links'])
             pagerank[item]['pagerank'] = (1-PAGERANK_DAMPING)+subeqn*(PAGERANK_DAMPING)
     pagerankprev = {}
     for item in pagerank:
