@@ -2,7 +2,7 @@ import requests
 import urlparse
 import itertools
 import re
-import robotparser
+from robotparser import RobotFileParser
 from BeautifulSoup import BeautifulSoup
 from time import sleep
 from copy import deepcopy
@@ -18,7 +18,7 @@ max_hops = 0
 max_frontiers = 0
 max_pages = None
 
-url_list, link_cache, black_list = [], {}, []
+url_list, black_list, domain_robot_rules = [], [], {}
 
 class Database():
     """
@@ -83,10 +83,9 @@ class Webpage():
         if self.needs_to_be_scanned is True:
             headers = {'User-agent':SPIDER_USER_AGENT}
             self.urlparse = urlparse.urlparse(self.url)
-            pass
-
-        #check robots. If robots says no scanning, throw out page
-        #robotcheck = requests.get(urlparse.urlparse(URL)[1]+/robots.txt')
+            robotcheck = RobotFileParser()
+            robotcheck.set_url(urlparse)
+            self.needs_to_be_scanned = robotcheck.can_fetch(SPIDER_USER_AGENT, self.urlparse[0]+'/robots.txt')
 
     def get_page(self):
         """
@@ -194,6 +193,7 @@ def main():
     for item in url_list:
         item = Webpage()
         item.set_url(url=seed)
+        item.page_robot_scannable()
         if item.need_to_be_scanned is True:
             item.get_page()
             item.parse_parge()

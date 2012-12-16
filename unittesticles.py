@@ -51,12 +51,17 @@ class SpiderTests(unittest.TestCase):
         self.beepboop.set_url(theurl2)
         self.assertEqual(self.beepboop.need_to_be_scanned, False), "Previous scanned URL should not be scannable, but was shown to be scannable"
 
+    def test_is_a_robot_scannable_page_scannable(self):
+        pass
+
+    def test_is_a_robot_unscannable_page_unscannable(self):
+        pass
+
     def test_outgoing_links_to_pagerank_format(self):
         """
         Test the mechanism for converting a dictionary of urls and their
         outgoing links to a dictionary of urls, their incoming links, and
-        the number of links on each incoming links' page
-        Similar to the test above
+        the number of links on each incoming links' page.
         """
         dictionary_of_outgoing_links = {'site1':[         'site2', 'site3'],
                                         'site2':[                  'site3'],
@@ -70,16 +75,11 @@ class SpiderTests(unittest.TestCase):
 
     def test_pagerank_results(self):
         """
-        Test the results coming out of the pagerank algorithm
-
+        Test the results coming out of the pagerank algorithm.
         Note: the results of this assert do not pass unit test because they are
-        unrounded floats, however they are consideredequivalent values for our
-        search engine purposes
+        unrounded floats, however they are equivalent enough values for our
+        search engine purposes.
         """
-
-        #expected_input = {'site1':{'outgoing links': 2, 'incoming links':[                            ('site3', 2)], 'pagerank': 1},
-        #                  'site2':{'outgoing links': 1, 'incoming links':[('site3', 2), ('site1', 2)              ], 'pagerank': 1},
-        #                  'site3':{'outgoing links': 2, 'incoming links':[('site2', 1), ('site1', 2)              ], 'pagerank': 1}}
 
         expected_input = {'site1':{'outgoing links': 2, 'incoming links':[                            ('site3', 2)], 'pagerank': 1},
                           'site2':{'outgoing links': 1, 'incoming links':[('site3', 2), ('site1', 2)              ], 'pagerank': 1},
@@ -91,7 +91,7 @@ class SpiderTests(unittest.TestCase):
 
     def tearDown(self):
         """
-        Closes the environment for testing the spider
+        Closes the environment for testing the spider.
         """
         pass
 
