@@ -42,6 +42,15 @@ class SpiderTests(unittest.TestCase):
         self.beepboop.load_url(theurl)
         self.assertEqual(self.beepboop.need_to_be_scanned, False), "Blacklisted URL should not be scannable, but was shown to be scannable"
 
+    def test_does_unreachable_url_throw_error(self):
+        """
+        Is a website at an  unreachable url flagged to not be scanned?
+        """
+        self.beepboop.load_url("www.poopiedoopie.com") #Hopefully this won't become a dirty website in the future
+        self.beepboop.page_robot_scannable()
+        self.beepboop.need_to_be_scanned
+        self.assertEqual(self.beepboop.need_to_be_scanned, False), "Website at an unreachable URL should not be scannable but was flagged scannable"
+
     def test_previously_scanned_webpages_should_not_be_scannable(self):
         """
         Is a previously scanned page correctly flagged to not be scanned?

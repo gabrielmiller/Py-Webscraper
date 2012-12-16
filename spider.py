@@ -1,6 +1,5 @@
 import requests
 import urlparse
-import itertools
 import re
 from robotparser import RobotFileParser
 from BeautifulSoup import BeautifulSoup
@@ -14,10 +13,6 @@ REQUEST_TIME_INCREMENT = 5
 SPIDER_USER_AGENT = 'Toastie'
 PAGERANK_ITERATIONS = 30
 PAGERANK_DAMPING = 0.85
-
-max_hops = 0
-max_frontiers = 0
-max_pages = None
 
 url_list, black_list, inverted_index = [], [], {}
 
@@ -56,13 +51,7 @@ class Webpage():
     object will be filled with that data and inserted into a database for
     searching.
     """
-    _instanceID = itertools.count(0)
-
-    def __init__(self):
-        """
-        On initialization of a new url a count is added to the object
-        """
-        self.count = self._instanceID.next()
+    number_of_scraped_pages = 0
 
     def load_url(self, url):
         """
@@ -101,6 +90,8 @@ class Webpage():
         try:
             self.request = requests.get(self.url, headers=headers)
             self.pagehtml = BeautifulSoup(self.request.text)
+            self.count = self.instanceID.next()
+            Webpage.number_of_scraped_pages += 1
         except:
             raise Exception
 
@@ -189,14 +180,21 @@ def page_rank(crawled_sites_incoming_link_format, number_of_iterations):
     return pagerankprev
 
 def main():
-    # Take the provided seed, frontiers, and maxpages and instantiate them
+    # Take the provided seed, max frontiers, max hops, and max pages and 
+    # instantiate them
+    # Will implement frontiers and hops in a later revision
     seed = None
-    frontiers = None
-    maxpages = None
+    max_pages = None
     firstseed = 0
     url_list.append(firstseed)
 
     for item in url_list:
+        if len(Webpage.instanceID) > maxpages:
+            break
+        #if frontier > max_frontiers:
+        #    break
+        #if hop > max_hops:
+        #    break
         item = Webpage()
         item.load_url(url=seed)
         item.page_robot_scannable()
