@@ -63,7 +63,7 @@ class Webpage():
         """
         self.count = self._instanceID.next()
 
-    def set_url(self, url):
+    def load_url(self, url):
         """
         A URL is passed in and the object's property url is set. If the URL
         has already been scanned or is blacklisted then the object is flagged
@@ -80,12 +80,16 @@ class Webpage():
         """
         Checks whether the page is allowed to be crawled
         """
-        if self.needs_to_be_scanned is True:
-            headers = {'User-agent':SPIDER_USER_AGENT}
-            self.urlparse = urlparse.urlparse(self.url)
-            robotcheck = RobotFileParser()
-            robotcheck.set_url(urlparse)
-            self.needs_to_be_scanned = robotcheck.can_fetch(SPIDER_USER_AGENT, self.urlparse[0]+'/robots.txt')
+        if self.need_to_be_scanned is True:
+            try:
+                headers = {'User-agent':SPIDER_USER_AGENT}
+                self.urlparse = urlparse.urlparse(self.url)
+                self.robotcheck = RobotFileParser()
+                self.robotcheck.set_url('http://'+self.urlparse[1]+'/robots.txt')
+                self.robotcheck.read()
+                self.need_to_be_scanned = self.robotcheck.can_fetch(SPIDER_USER_AGENT, self.url)
+            except:
+                self.need_to_be_scanned = False
 
     def get_page(self):
         """
@@ -192,7 +196,7 @@ def main():
 
     for item in url_list:
         item = Webpage()
-        item.set_url(url=seed)
+        item.load_url(url=seed)
         item.page_robot_scannable()
         if item.need_to_be_scanned is True:
             item.get_page()

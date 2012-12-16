@@ -30,7 +30,7 @@ class SpiderTests(unittest.TestCase):
         attribute after being assigned one?
         """
         theurl = "http://www.google.com"
-        self.beepboop.set_url(theurl)
+        self.beepboop.load_url(theurl)
         self.assertEqual(self.beepboop.url, theurl), "Instantiated url object's url property doesn't match what it was defined to be"
 
     def test_blacklisted_webpage_objects_should_not_be_scannable(self):
@@ -39,7 +39,7 @@ class SpiderTests(unittest.TestCase):
         """
         theurl = "http://www.google.com"
         black_list.append(theurl)
-        self.beepboop.set_url(theurl)
+        self.beepboop.load_url(theurl)
         self.assertEqual(self.beepboop.need_to_be_scanned, False), "Blacklisted URL should not be scannable, but was shown to be scannable"
 
     def test_previously_scanned_webpages_should_not_be_scannable(self):
@@ -48,14 +48,42 @@ class SpiderTests(unittest.TestCase):
         """
         theurl2 = "http://www.google.com"
         url_list.append(theurl2)
-        self.beepboop.set_url(theurl2)
+        self.beepboop.load_url(theurl2)
         self.assertEqual(self.beepboop.need_to_be_scanned, False), "Previous scanned URL should not be scannable, but was shown to be scannable"
 
     def test_is_a_robot_scannable_page_scannable(self):
-        pass
+        """
+        Tests if a page entered scannable in a robots.txt is correctly
+        interpreted as scannable.
+
+        curl of buttbox:8002/robots.txt responds as follows:
+
+        User-agent: Toastie
+        Disallow: /unscannable_to_ua_Toastie
+        """
+        url_of_interest = "http://buttbox:8002/scannable_to_ua_Toastie"
+        self.beepboop.load_url(url_of_interest)
+        self.assertEqual(self.beepboop.need_to_be_scanned, True), "Scannable url according to robots.txt is correctly scannable prior to being checked"
+        self.beepboop.page_robot_scannable()
+        self.assertEqual(self.beepboop.need_to_be_scanned, True), "Scannable url according to robots.txt is correctly scannable after being checked"
+
 
     def test_is_a_robot_unscannable_page_unscannable(self):
-        pass
+        """
+        Tests if a page entered unscannable in a robots.txt is correctly
+        interpreted as unscannable.
+
+        curl of buttbox:8002/robots.txt responds as follows:
+
+        User-agent: Toastie
+        Disallow: /unscannable_to_ua_Toastie
+        """
+        url_of_interest2 = "http://buttbox:8002/unscannable_to_ua_Toastie"
+        self.beepboop.load_url(url_of_interest2)
+        self.assertEqual(self.beepboop.need_to_be_scanned, True), "Unscannable url according to robots.txt is correctly scannable prior to being checked"
+        self.beepboop.page_robot_scannable()
+        self.assertEqual(self.beepboop.need_to_be_scanned, False), "Unscannable url according to robots.txt is correctly unscannable after being checked"
+
 
     def test_outgoing_links_to_pagerank_format(self):
         """
