@@ -171,8 +171,10 @@ def page_rank(crawled_sites_incoming_link_format, number_of_iterations):
         pagerankprev = deepcopy(pagerank)
         for item in pagerank:
             subeqn = 0
-            for subitem, index in enumerate(pagerankprev[item]['incoming links']):
-                subeqn += float(pagerankprev[pagerankprev[item]['incoming links'][subitem][0]]['pagerank']) / float(pagerankprev[pagerankprev[item]['incoming links'][subitem][0]]['outgoing links'])
+            # For each url of an incoming site, that site is traversed for its pagerank and number of outgoing links
+            # The iteration below runs once for every incoming url to a page(one for every arrow head in a graph)
+            for index, subitem in enumerate(pagerankprev[item]['incoming links']):
+                subeqn += float(pagerankprev[pagerankprev[item]['incoming links'][index]]['pagerank']) / float(pagerankprev[pagerankprev[item]['incoming links'][index]]['number of outgoing links'])
             pagerank[item]['pagerank'] = (1-PAGERANK_DAMPING)+subeqn*(PAGERANK_DAMPING)
     pagerankprev = {}
     for item in pagerank:

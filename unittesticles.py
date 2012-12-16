@@ -135,9 +135,10 @@ class SpiderTests(unittest.TestCase):
         search engine purposes.
         """
 
-        expected_input = {'site1':{'outgoing links': 2, 'incoming links':[                            ('site3', 2)], 'pagerank': 1},
-                          'site2':{'outgoing links': 1, 'incoming links':[('site3', 2), ('site1', 2)              ], 'pagerank': 1},
-                          'site3':{'outgoing links': 2, 'incoming links':[('site2', 1), ('site1', 2)              ], 'pagerank': 1}}
+        #expected_input =  {'site1':{'incoming links':[                  'site3'], 'number of outgoing links': 2, 'pagerank': 1},
+        #                   'site2':{'incoming links':['site3', 'site1'         ], 'number of outgoing links': 1, 'pagerank': 1},
+        #                   'site3':{'incoming links':['site2', 'site1'         ], 'number of outgoing links': 2, 'pagerank': 1}}
+
 
         #self.assertEqual(page_rank(expected_input, 1), {'site1':0.575, 'site2':1.0, 'site3':1.425}), "Pagerank output round 1 incorrect"
         #self.assertEqual(page_rank(expected_input, 2), {'site1':0.755625, 'site2':1.0, 'site3':1.244375}), "Pagerank output round 2 incorrect"
