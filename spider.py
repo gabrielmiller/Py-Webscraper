@@ -132,13 +132,13 @@ class Webpage():
         Iterates through the words in the page text and creates and adds them
         to an index.
         """
-        self.pagetextlist = self.pagetext.split(' ')
+        self.pagetextlist = self.pagetext.split(' ') #Noted error: This catches punctuation along with words.
         for index, word in enumerate(self.pagetextlist):
             if word not in STOP_WORDS:
                 if not inverted_index.get(word):
-                    inverted_index[word]=[str(index)+':'+self.url]
+                    inverted_index[word]={'url':self.url,'offsets':[index]}
                 else:
-                    inverted_index[word].append(str(index)+':'+self.url)
+                    inverted_index[word]['offsets'].append(index)
 
     def set_page_scanned(self):
         """

@@ -93,14 +93,14 @@ class SpiderTests(unittest.TestCase):
         self.beepboop.page_robot_scannable()
         self.assertEqual(self.beepboop.need_to_be_scanned, False), "Unscannable url according to robots.txt is correctly unscannable after being checked"
 
-#    def test_is_inverted_index_working(self):
-#        """
-#        Tests whether the inverted indexing mechanism is working properly
-#        """
-#        self.beepboop.pagetext = "How would you like to work for a big company like google?"
-#        self.beepboop.load_url("url")
-#        self.beepboop.inverted_index_page_text()
-#        print inverted_index
+    def test_is_inverted_index_working(self):
+        """
+        Tests whether the inverted indexing mechanism is working properly
+        """
+        self.beepboop.pagetext = "How would you like to work for a big company like Google? They are quite big"
+        self.beepboop.load_url("http://goatse.cx/")
+        self.beepboop.inverted_index_page_text()
+        self.assertEqual(inverted_index['big']['offsets'], [8, 15]), "The inverted index is not properly functioning."
 
     def test_does_inverted_index_disclude_stopwords(self):
         """
@@ -153,13 +153,13 @@ class SpiderTests(unittest.TestCase):
         """
         input3 = {'site1':[         'site2', 'site3', 'site4'],
                   'site2':[                  'site3', 'site4'],
-                  'site3':['site1', 'site2'         ]}
+                  'site3':['site1', 'site2'                  ]}
 
         input4 = {'site1':[         'site2', 'site3', 'site4'],
                   'site2':[                  'site3', 'site4'],
-                  'site3':['site1', 'site2'         ],
-                  'site4':[                         ],
-                  'site5':[                         ]}
+                  'site3':['site1', 'site2'                  ],
+                  'site4':[                                  ],
+                  'site5':[                                  ]}
 
         a_random_number = randint(0,1000)
         self.assertEqual(page_rank(outgoing_links_to_pagerank(input3), a_random_number), page_rank(outgoing_links_to_pagerank(input4), a_random_number)), "Unscanned site pagerank is incorrect"
