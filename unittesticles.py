@@ -84,6 +84,23 @@ class SpiderTests(unittest.TestCase):
         self.beepboop.page_robot_scannable()
         self.assertEqual(self.beepboop.need_to_be_scanned, False), "Unscannable url according to robots.txt is correctly unscannable after being checked"
 
+#    def test_is_inverted_index_working(self):
+#        """
+#        Tests whether the inverted indexing mechanism is working properly
+#        """
+#        self.beepboop.pagetext = "How would you like to work for a big company like google?"
+#        self.beepboop.load_url("url")
+#        self.beepboop.inverted_index_page_text()
+#        print inverted_index
+
+    def test_does_inverted_index_disclude_stopwords(self):
+        """
+        Tests if the inverted index properly discludes stopwords
+        """
+        self.beepboop.pagetext = "the able about while where when which with yet you too twas these only on every his should wants"
+        self.beepboop.load_url("url")
+        self.beepboop.inverted_index_page_text()
+        self.assertEqual(inverted_index, {}), "Inverted index tried to index a stopword"
 
     def test_outgoing_links_to_pagerank_format(self):
         """
