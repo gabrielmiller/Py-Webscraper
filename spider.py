@@ -158,8 +158,7 @@ def outgoing_links_to_pagerank(dictionary_of_outgoing_links):
     for item in pagerank:
         try:
             pagerank[item]['number of outgoing links'] = len(dictionary_of_outgoing_links[item])
-        except KeyError: #This is a bandaid solution to pages that are referenced but weren't scanned
-            print item
+        except KeyError: #If a page was linked to but it was not scanned there will be a KeyError. This will fill in the "best known" information for that record.
             pagerank[item] = {'number of outgoing links': 0, 'incoming links':[]}
             for subitem in pagerank:
                 try:
@@ -185,11 +184,7 @@ def page_rank(crawled_sites_incoming_link_format, number_of_iterations):
             # For each url of an incoming site, that site is traversed for its pagerank and number of outgoing links
             # The iteration below runs once for every incoming url to a page(one for every arrow head in a graph)
             for index, subitem in enumerate(pagerankprev[item]['incoming links']):
-                try:
-                    subeqn += float(pagerankprev[pagerankprev[item]['incoming links'][index]]['pagerank']) / float(pagerankprev[pagerankprev[item]['incoming links'][index]]['number of outgoing links'])
-                except KeyError: #This is a bandaid solution to pages that are referenced but weren't scanned
-                    pagerankprev[subitem] = {'pagerank':1, 'number of outgoing links': 1, 'incoming links':item}
-                    subeqn += float(pagerankprev[pagerankprev[item]['incoming links'][index]]['pagerank']) / float(pagerankprev[pagerankprev[item]['incoming links'][index]]['number of outgoing links'])
+                subeqn += float(pagerankprev[pagerankprev[item]['incoming links'][index]]['pagerank']) / float(pagerankprev[pagerankprev[item]['incoming links'][index]]['number of outgoing links'])
             pagerank[item]['pagerank'] = (1-PAGERANK_DAMPING)+subeqn*(PAGERANK_DAMPING)
     pagerankprev = {}
     for item in pagerank:
