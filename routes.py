@@ -1,6 +1,9 @@
 import os
 from flask import render_template, redirect, url_for, request, flash, send_from_directory
 from application import *
+from pymongo import Connection
+from pymongo.errors import ConnectionFailure
+
 """
 This module contains the routing and logic for the search front-end side of
 this website

@@ -1,3 +1,4 @@
+import sys
 import requests
 import urlparse
 import re
@@ -5,8 +6,7 @@ from robotparser import RobotFileParser
 from BeautifulSoup import BeautifulSoup
 from time import sleep
 from copy import deepcopy
-from pymongo import Connection
-from pymongo.errors import ConnectionFailure
+from database import DatabaseConnection
 from stopwords import STOP_WORDS
 
 REQUEST_TIME_INCREMENT = 5
@@ -15,35 +15,6 @@ PAGERANK_ITERATIONS = 30
 PAGERANK_DAMPING = 0.85
 
 url_list, black_list, inverted_index = [], [], {}
-
-class Database():
-    """
-    Initiates a database connection and sets up data insertion/querying
-    """
-
-    def connect():
-        """
-        Establishes a database connection
-        """
-        try:
-            connection = Connection(host="localhost", port=27017)
-        except ConnectionFailure, error:
-            return "Could not connect to database: %s" % error
-            #sys.exit(1)
-        self.dbc = connection["ex14"]
-
-    def set_user_doc(doc):
-        """
-        Record the document to that was passed in as a dictionary
-        """
-        self.user_doc = doc
-
-    def insert_doc():
-        """
-        Insert the document into the database
-        """
-        if self.user_doc & self.dbc:
-            dbc.scrapedata.insert(self.user_doc, safe=True)
 
 class Webpage():
     """
@@ -192,9 +163,11 @@ def page_rank(crawled_sites_incoming_link_format, number_of_iterations):
     return pagerankprev
 
 def main():
-    # Take the provided seed, max frontiers, max hops, and max pages and 
-    # instantiate them
-    # Will implement frontiers and hops in a later revision
+    """
+    Take the provided seed, max frontiers, max hops, and max pages and 
+    instantiate them
+    Will implement frontiers and hops in a later revision
+    """
     seed = None
     max_pages = None
     firstseed = 0
@@ -225,10 +198,27 @@ def main():
         if item.pagehtml:
             dictionary_of_outgoing_links[item.url] = item.pagelinks
 
-    page_rank(outgoing_links_to_pagerank(dictionary_of_outgoing_links), PAGERANK_ITERATIONS)
+    page_rank_dictionary = page_rank(outgoing_links_to_pagerank(dictionary_of_outgoing_links), PAGERANK_ITERATIONS)
 
-    # Connect to database, submit records for each webpage: url, title, pagehtml, pagetext, outgoinglinks, num_outgoinglinks, incominglinks
-    # Submit inverted index data to database
+    dbconnection = DatabaseConnection()
+    dbconnection.connect()
+    for item in url_list:
+        if item.pagehtml:
+            to_insert = {'title':item.title,
+                         'url':item.url,
+                         'pagehtml':item.pagehtml,
+                         'pagetext':item.pagetext,
+                         'pagerank':page_rank_dictionary[item.url],
+                         'date':datetime.date.today()}
+            dbconnection.load_document(to_insert)
+            dbconnection.insert_document(scrape_data)
+
+    for word in inverted_index:
+        to_insert = {'word':word,
+                     'date':datetime.date.today(),
+                     'offsets':}
+        dbconnection.load_document(to_insert)
+        dbconnection.insert_document('inverted_index')
 
 if __name__ == "__main__":
     main()

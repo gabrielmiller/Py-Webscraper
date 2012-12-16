@@ -101,6 +101,8 @@ class SpiderTests(unittest.TestCase):
         self.beepboop.load_url("http://goatse.cx/")
         self.beepboop.inverted_index_page_text()
         self.assertEqual(inverted_index['big']['offsets'], [8, 15]), "The inverted index is not properly functioning."
+        for item in inverted_index:
+            print item, inverted_index[item]
 
     def test_does_inverted_index_disclude_stopwords(self):
         """
