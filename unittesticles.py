@@ -158,7 +158,7 @@ class SpiderTests(unittest.TestCase):
         input4 = {'site1':[         'site2', 'site3', 'site4'],
                   'site2':[                  'site3'],
                   'site3':['site1', 'site2'         ],
-                  'site4':[                         ]} #This would cause a division by zero but is forced to have a length of 1
+                  'site4':[                         ]}
 
         a_random_number = randint(0,1000)
         self.assertEqual(page_rank(outgoing_links_to_pagerank(input3), a_random_number), page_rank(outgoing_links_to_pagerank(input4), a_random_number)), "Unscanned site pagerank is incorrect"
