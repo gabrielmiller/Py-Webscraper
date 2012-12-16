@@ -160,11 +160,12 @@ def outgoing_links_to_pagerank(dictionary_of_outgoing_links):
             pagerank[item]['number of outgoing links'] = len(dictionary_of_outgoing_links[item])
         except KeyError: #This is a bandaid solution to pages that are referenced but weren't scanned
             print item
-            pagerank[item] = {'number of outgoing links': 1, 'incoming links':[]}
+            pagerank[item] = {'number of outgoing links': 0, 'incoming links':[]}
             for subitem in pagerank:
                 try:
                     if item in dictionary_of_outgoing_links[subitem]:
                         pagerank[item]['incoming links'].append(subitem)
+                        pagerank[item]['number of outgoing links']+=1
                 except:
                     pass
     return pagerank

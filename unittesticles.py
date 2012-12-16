@@ -152,11 +152,11 @@ class SpiderTests(unittest.TestCase):
         The two inputs below should have identical output.
         """
         input3 = {'site1':[         'site2', 'site3', 'site4'],
-                  'site2':[                  'site3'],
+                  'site2':[                  'site3', 'site4'],
                   'site3':['site1', 'site2'         ]}
 
         input4 = {'site1':[         'site2', 'site3', 'site4'],
-                  'site2':[                  'site3'],
+                  'site2':[                  'site3', 'site4'],
                   'site3':['site1', 'site2'         ],
                   'site4':[                         ]}
 
