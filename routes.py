@@ -1,8 +1,7 @@
 import os
 from flask import render_template, redirect, url_for, request, flash, send_from_directory
 from application import *
-from pymongo import Connection
-from pymongo.errors import ConnectionFailure
+from database import DatabaseConnection
 
 """
 This module contains the routing and logic for the search front-end side of
@@ -45,6 +44,24 @@ def search():
     Renders the search results page.
     """
     context = get_query_string(request.args)
+    if context['query']:
+        search_words = context['query'].split()
+        search_dict = {}
+        if len(search_words)>1:
+            search_dict = {'$or':[]}
+            for item in search_words:
+                search_dict['$or'].append({'word':item})
+        else:
+            search_dict = {'word':search_words[0]}
+        dbconnection = DatabaseConnection()
+        dbconnection.connect()
+        query_results = dbconnection.query(collection='invertedindex', context=search_dict)
+        if query_results == None:
+            context['results'] = None
+        else:
+            context['results']=[]
+            for item in query_results:
+                context['results'].append(item)
     return render_template("search.html", context=context)
 
 @app.route("/spider")

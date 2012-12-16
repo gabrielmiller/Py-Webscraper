@@ -209,7 +209,7 @@ def main():
                          'pagehtml':item.pagehtml,
                          'pagetext':item.pagetext,
                          'pagerank':page_rank_dictionary[item.url],
-                         'date':datetime.date.today()}
+                         'date':datetime.datetime.now()}
             dbconnection.load_document(to_insert)
             dbconnection.insert_document(scrape_data)
 

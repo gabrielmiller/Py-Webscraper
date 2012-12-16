@@ -1,4 +1,4 @@
-import pymongo
+from pymongo import Connection
 from pymongo.errors import ConnectionFailure
 
 class DatabaseConnection():
@@ -29,12 +29,21 @@ class DatabaseConnection():
         """
         Insert the document into the database, into the provided collection
         """
-        if self.user_doc & self.dbd:
+        if self.document and self.dbd:
             self.dbc = self.dbd[collection]
             self.dbc.insert(self.document, safe=True)
 
-    def query_documents(self, collection='junkdata', context=None):
+    def query(self, collection='junkdata', context=None):
         """
         Query data out of the collection
         """
+        if self.dbd:
+            self.dbc = self.dbd[collection]
+            self.results = self.dbc.find(context)
+            self.returnlist = []
+            for items in self.results:
+                self.returnlist.append(items)
+            return self.returnlist
+        else:
+            return None
 

@@ -1,10 +1,28 @@
 import unittest
 from random import randint
 from spider import *
+from routes import *
+from database import DatabaseConnection
 
 """
 This module will include all of the unit tests
 """
+
+class DatabaseTests(unittest.TestCase):
+    """
+    This test suite contains tests on the functionality provided by the
+    database module.
+    """
+
+    def setUp(self):
+        #self.dbconnection = DatabaseConnection()
+        pass
+
+    def test_a_search_query_is_built_from_the_input(self):
+        """
+        Tests if a search query for mongoDB is properly created from the
+        search words provided.
+        """
 
 class SpiderTests(unittest.TestCase):
     """
