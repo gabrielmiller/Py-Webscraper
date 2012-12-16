@@ -89,7 +89,7 @@ class Webpage():
 
         #testing
         if urlparse.urlparse(self.url)[1] in whitelist:
-            self.request = requests.get(url, headers=headers)
+            self.request = requests.get(self.url, headers=headers)
             self.soup = BeautifulSoup.BeautifulSoup(self.request.text)
         else:
             self.error = True
@@ -117,10 +117,11 @@ class Webpage():
         for item in filter(get_visible_elements, self.text):
             if item != '\n':
                 visibleText+= item
-        self.pagelinks = []
+        self.pagelinks = {}
 
         for link in soup.findAll('a'):
-            self.pagelinks.append(link.get('href'))
+            #self.pagelinks.append(link.get('href'))
+            self.pagelinks[link.get('href')
         self.pagelinks.sort()
 
         for link in self.pagelinks:
@@ -145,6 +146,13 @@ class Webpage():
             else:
                 url_list.append(link)
                 linkCache[self.url]=[link]
+
+    def get_page_links(self):
+        """
+        This method returns all of the unique urls scraped from a page. If no
+        urls are present it returns null.
+        """
+        return self.pagelinks
 
     def reverse_index_page_text(self):
         """
@@ -194,51 +202,38 @@ def page_rank(crawled_sites_incoming_link_format, number_of_iterations):
     return pagerankprev
 
 def main():
-    while 1:
-        input = raw_input("Enter a seed url >> ")
-        """
-        try:
-            if (type(input) == str) & (input[:7] == "http://"):
-                break
-            else:
-                print "Your input must be a string that begins with http://"
-        except IndexError: #in case input was left blank
-            print "Your input must be a string that begins with http://"
-        except:
-            print "An unexpected error occurred. Please try again. \nYour input must be a string that begins with http://"
-        """
+    pass
+    # Take the provided seed, frontiers, and maxpages and instantiate them
+    seed = None
+    frontiers = None
+    maxpages = None
+    firstseed = 0
+    url_list.append(firstseed)
 
-        input = "http://127.0.0.1/~batman/"
-        #input = "http://buttbox:8002/~gabe/"
-        break
-    seedURL = input[:]
+    for item in url_list:
+        item = Webpage()
+        item.set_url(url=seed)
+        if item.need_to_be_scanned is True:
+            item.get_page()
+            item.get_visible_elements()
+            item.parse_parge()
+            item.get_page_links()
+            item.reverse_index_page()
+            item.set_page_scanned()
+        else:
+            item.set_page_scanned()
 
-    while 1:
-        input = raw_input("Enter a maximum number of webpages to crawl >> ")
-        try:
-            if (int(input) > 0):
-                break
-            else:
-                print "You must enter a number greater than 0"
-        except:
-            print "You must enter a number greater than 0"
+    dictionary_of_outgoing_links = {}
 
-    maxFrontiers = int(input)
+    for item in url_list:
+        if item.title and item.pagehtml:
+            dictionary_of_outgoing_links[item.url] = item.pagelinks
 
-    while 1:
-        input = raw_input("Enter a maximum number of links beyond the seed >> ")
-        try:
-            if (int(input) > 0):
-                break
-            else:
-                print "You must enter a number greater than 0"
-        except:
-            print "You must enter a number greater than 0"
-    maxHops = int(input[:])
+    page_rank(outgoing_links_to_pagerank(dictionary_of_outgoing_links), PAGERANK_ITERATIONS)
 
-    print 50*"#"
-    print "seedURL: \t"+seedURL+"\nmaxFrontiers: \t"+str(maxFrontiers)+"\nmaxHops: \t"+str(maxHops)
-    print 50*"#"
+    # Connect to database, submit records for each webpage: url, title, pagehtml, pagetext, outgoinglinks, num_outgoinglinks, incominglinks
+
+    """
 
     URLDir.append((URL(seedURL),NULL,0))
     linkCache.append(seedURL,NULL)
@@ -260,11 +255,7 @@ def main():
             break
         print "Page "+str(index),
         process_url(item)
+    """
 
-    print 50*"#"
-
-    input = raw_input("Press enter to exit")
-"""
 if __name__ == "__main__":
     main()
-"""
