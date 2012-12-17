@@ -41,17 +41,19 @@ class DatabaseConnection():
             self.dbc = self.dbd['invertedindex']
             self.results = self.dbc.find(context)
             self.returndict = {}
-            try:
-                if len(self.results) > 1:
-                    self.returndict['$or'] = []
-                    for items in self.results:
+            self.numitems = 0
+            for items in self.results:
+                if self.numitems == 1:
+                    if not self.returndict.get('$or'):
+                        self.returndict['$or'] = []
+                    try:
+                        self.returndict.pop(['url'])
+                    except:
                         self.returndict['$or'].append({'url':items['hits']['url']})
-                        #self.returnlist.append(items['url'])
-                else:
-                    for item in self.results:
-                        self.returndict['url'] = items['hits']['url']
-            except Exception, e:
-                return e
+                if self.numitems == 0:
+                    self.returndict['url'] = items['hits']['url']
+                self.numitems += 1
+
             return self.returndict
         else:
             return None
