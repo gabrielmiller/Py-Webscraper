@@ -33,12 +33,35 @@ class DatabaseConnection():
             self.dbc = self.dbd[collection]
             self.dbc.insert(self.document, safe=True)
 
-    def query(self, collection='junkdata', context=None):
+    def query_index(self, context=None):
         """
         Query data out of the collection
         """
         if self.dbd:
-            self.dbc = self.dbd[collection]
+            self.dbc = self.dbd['invertedindex']
+            self.results = self.dbc.find(context)
+            self.returndict = {}
+            try:
+                if len(self.results) > 1:
+                    self.returndict['$or'] = []
+                    for items in self.results:
+                        self.returndict['$or'].append({'url':items['hits']['url']})
+                        #self.returnlist.append(items['url'])
+                else:
+                    for item in self.results:
+                        self.returndict['url'] = items['hits']['url']
+            except Exception, e:
+                return e
+            return self.returndict
+        else:
+            return None
+
+    def query_webpages(self, context=None):
+        """
+        Query data out of the collection
+        """
+        if self.dbd:
+            self.dbc = self.dbd['scrapedata']
             self.results = self.dbc.find(context)
             self.returnlist = []
             for items in self.results:
@@ -46,4 +69,5 @@ class DatabaseConnection():
             return self.returnlist
         else:
             return None
+
 

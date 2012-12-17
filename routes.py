@@ -55,13 +55,24 @@ def search():
             search_dict = {'word':search_words[0]}
         dbconnection = DatabaseConnection()
         dbconnection.connect()
-        query_results = dbconnection.query(collection='invertedindex', context=search_dict)
+        query_results = dbconnection.query_index(context=search_dict)
         if query_results == None:
-            context['results'] = None
+            context['results1'] = None
         else:
-            context['results']=[]
-            for item in query_results:
-                context['results'].append(item)
+            context['results1'] = query_results
+            #context['results1']=[]
+            search_dict2={}
+            #for item in query_results:
+            #    context['results1'].append(item)
+            """
+                if len(item)>1:
+                    search_dict2 = {'$or':[]}
+                    for object in item:
+                         search_dict2['$or'].append({'url':object['url']})
+                else:
+                    for object in item:
+                        search_dict2['url']=object['url']
+            """
     return render_template("search.html", context=context)
 
 @app.route("/spider")
