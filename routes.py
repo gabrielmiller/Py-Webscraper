@@ -1,28 +1,13 @@
 import os
+from datetime import datetime
 from flask import render_template, redirect, url_for, request, flash, send_from_directory
 from application import *
 from database import DatabaseConnection
+from functions import get_query_string
 
 """
-This module contains the routing and logic for the search front-end side of
-this website
+This module contains the routing for the search front-end of the website.
 """
-
-def get_query_string(input=None):
-    """
-    This function checks the querystring for the parameter "query" and returns its
-    value if present. If that parameter is not present it returns null.
-    """
-    if input:
-        context = dict()
-        context['query'] = input.get('query')
-        context['sort'] = input.get('sort')
-        context['display'] = input.get('display')
-        context['page'] = input.get('page')
-        context['results'] = input.get('results')
-        return context
-    else:
-        return None
 
 @app.route("/favicon.ico")
 def favicon():
@@ -36,7 +21,9 @@ def frontpage():
     """
     Renders the search splash page.
     """
-    return render_template("frontpage.html")
+    context={}
+    context['year']=datetime.today().year
+    return render_template("frontpage.html", context=context)
 
 @app.route("/search")
 def search():
@@ -44,6 +31,7 @@ def search():
     Renders the search results page.
     """
     context = get_query_string(request.args)
+    context['year']=datetime.today().year
     if context['query']:
         search_words = context['query'].split()
         search_dict = {}
@@ -81,6 +69,7 @@ def spider():
     Renders the spider dashboard page.
     """
     context = get_query_string(request.args)
+    context['year']=datetime.today().year
     return render_template("spider.html", context=context)
 
 @app.route("/addspider", methods=['POST'])
