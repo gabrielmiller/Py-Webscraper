@@ -6,6 +6,7 @@ of this web application.
 """
 
 app = Flask("Toastie")
+app.secret_key = '11jTNgf;d34%44j)294dnQ0dfg$443fjjdPq4RT332'
 
 from routes import *
 
