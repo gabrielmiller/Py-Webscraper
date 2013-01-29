@@ -1,9 +1,8 @@
 import os
-from datetime import datetime
 from flask import render_template, redirect, url_for, request, flash, send_from_directory
 from application import *
 from database import DatabaseConnection
-from functions import get_query_string
+from functions import *
 
 """
 This module contains the routing for the search front-end of the website.
@@ -21,8 +20,7 @@ def frontpage():
     """
     Renders the search splash page.
     """
-    context={}
-    context['year']=datetime.today().year
+    context = get_context(request)
     return render_template("frontpage.html", context=context)
 
 @app.route("/search")
@@ -30,9 +28,8 @@ def search():
     """
     Renders the search results page.
     """
-    context = get_query_string(request.args)
-    context['year']=datetime.today().year
-    if context['query']:
+    context = get_context(request)
+    if context.get('query'):
         search_words = context['query'].split()
         search_dict = {}
         if len(search_words)>1:
@@ -68,14 +65,14 @@ def spider():
     """
     Renders the spider dashboard page.
     """
-    context = get_query_string(request.args)
-    context['year']=datetime.today().year
+    context = get_context(request)
     return render_template("spider.html", context=context)
 
-@app.route("/addspider", methods=['POST'])
+@app.route("/addspider", methods=["GET","POST"])
 def addspider():
     """
     Post requests to this url will add a spider.
     """
-    flash('Error: Adding spiders is not yet implemented. Try again later!', category='text-error')
+    if request.method == 'POST':
+        flash('Error: Adding spiders is not yet implemented. Try again later!', category='text-error')
     return redirect(url_for('frontpage'))
