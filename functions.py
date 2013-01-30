@@ -29,3 +29,9 @@ def get_query_string(input=None, context={}):
         return context
     else:
         return None
+
+def get_index_from_search_terms(input=None):
+    """
+    Looks up the search terms on mongo and returns their indices.
+    """
+    pass

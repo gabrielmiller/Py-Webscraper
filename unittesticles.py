@@ -24,6 +24,21 @@ class DatabaseTests(unittest.TestCase):
         search words provided.
         """
 
+class FunctionTests(unittest.TestCase):
+    """
+    This test suite contains tests on the Functions module.
+    """
+
+    def setUp(self):
+        pass
+
+    def test_look_up_index_for_single_word_search(self):
+        """
+        Tests if a single word searched will build the proper mongo query
+        and return the correct index.
+        """
+        pass
+
 class SpiderTests(unittest.TestCase):
     """
     This test suite contains tests on the functionality provided by the spider
