@@ -17,7 +17,7 @@ class DatabaseConnection():
             print "Could not connect to database: %s \n" % error
             if __name__ == "spider":
                 sys.exit(1)
-        self.dbd = connection["ex14"]
+        self.dbconnection = connection["ex14"]
 
     def load_document(self, document):
         """
@@ -29,17 +29,17 @@ class DatabaseConnection():
         """
         Insert the document into the database, into the provided collection
         """
-        if self.document and self.dbd:
-            self.dbc = self.dbd[collection]
-            self.dbc.insert(self.document, safe=True)
+        if self.document and self.dbconnection:
+            self.dbcollection = self.dbconnection[collection]
+            self.dbcollection.insert(self.document, safe=True)
 
     def query_index(self, context=None):
         """
         Query data out of the collection
         """
-        if self.dbd:
-            self.dbc = self.dbd['invertedindex']
-            self.results = self.dbc.find(context)
+        if self.dbconnection:
+            self.dbcollection = self.dbconnection['invertedindex']
+            self.results = self.dbcollection.find(context)
             self.returndict = {}
             self.numitems = 0
             for items in self.results:
@@ -62,9 +62,9 @@ class DatabaseConnection():
         """
         Query data out of the collection
         """
-        if self.dbd:
-            self.dbc = self.dbd['scrapedata']
-            self.results = self.dbc.find(context)
+        if self.dbconnection:
+            self.dbcollection = self.dbconnection['scrapedata']
+            self.results = self.dbcollection.find(context)
             self.returnlist = []
             for items in self.results:
                 self.returnlist.append(items)
