@@ -45,7 +45,7 @@ def build_mongo_query(input=None, action=None):
     result = {}
     if action == "select_indices":
         if len(input)<2:
-            result['word']=item
+            result['word']=input
             pass
         else:
             result['$or']=[]

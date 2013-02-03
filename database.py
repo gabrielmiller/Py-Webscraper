@@ -59,18 +59,17 @@ class DatabaseConnection():
         else:
             return None
 
-    def query_webpages(self, context=None):
-        """
-        Query data out of the collection
-        """
-        if self.dbconnection:
-            self.dbcollection = self.dbconnection['scrapedata']
-            self.results = self.dbcollection.find(context)
-            self.returnlist = []
-            for items in self.results:
-                self.returnlist.append(items)
-            return self.returnlist
-        else:
-            return None
-
+#    def query_webpages(self, context=None):
+#        """
+#        Query data out of the collection
+#        """
+#        if self.dbconnection:
+#            self.dbcollection = self.dbconnection['scrapedata']
+#            self.results = self.dbcollection.find(context)
+#            self.returnlist = []
+#            for items in self.results:
+#                self.returnlist.append(items)
+#            return self.returnlist
+#        else:
+#            return None
 

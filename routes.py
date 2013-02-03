@@ -29,35 +29,41 @@ def search():
     Renders the search results page.
     """
     context = get_context(request)
+#    if context.get('query'):
+#        search_words = context['query'].split()
+#        search_dict = {}
+#        if len(search_words)>1:
+#            search_dict = {'$or':[]}
+#            for item in search_words:
+#                search_dict['$or'].append({'word':item})
+#        else:
+#            search_dict = {'word':search_words[0]}
+    dbconnection = DatabaseConnection()
+    dbconnection.connect()
     if context.get('query'):
-        search_words = context['query'].split()
-        search_dict = {}
-        if len(search_words)>1:
-            search_dict = {'$or':[]}
-            for item in search_words:
-                search_dict['$or'].append({'word':item})
+        indices = build_index_dictionary_from_search_terms(context['query'])
+        #indices = dbconnection.query_collection(query=context['query'], collection='invertedindex')
+        if indices != None:
+            pass
         else:
-            search_dict = {'word':search_words[0]}
-        dbconnection = DatabaseConnection()
-        dbconnection.connect()
-        query_results = dbconnection.query_index(context=search_dict)
-        if query_results == None:
-            context['results1'] = None
-        else:
-            context['results1'] = query_results
-            #context['results1']=[]
-            search_dict2={}
-            #for item in query_results:
-            #    context['results1'].append(item)
-            """
-                if len(item)>1:
-                    search_dict2 = {'$or':[]}
-                    for object in item:
-                         search_dict2['$or'].append({'url':object['url']})
-                else:
-                    for object in item:
-                        search_dict2['url']=object['url']
-            """
+            flash('No results were found', category='text-error')
+#    if query_results == None:
+#        context['results1'] = None
+#    else:
+#        context['results1'] = query_results
+#        #context['results1']=[]
+#        search_dict2={}
+#        #for item in query_results:
+        #    context['results1'].append(item)
+#        
+#            if len(item)>1:
+#                search_dict2 = {'$or':[]}
+#                for object in item:
+#                     search_dict2['$or'].append({'url':object['url']})
+#            else:
+#                for object in item:
+#                    search_dict2['url']=object['url']
+#        
     return render_template("search.html", context=context)
 
 @app.route("/spider")
