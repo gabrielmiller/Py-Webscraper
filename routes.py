@@ -2,7 +2,7 @@ import os
 from flask import render_template, redirect, url_for, request, flash, send_from_directory
 from application import *
 from database import DatabaseConnection
-from functions import *
+import functions
 
 """
 This module contains the routing for the search front-end of the website.
@@ -20,7 +20,7 @@ def frontpage():
     """
     Renders the search splash page.
     """
-    context = get_context(request)
+    context = functions.get_context(request)
     return render_template("frontpage.html", context=context)
 
 @app.route("/search")
@@ -28,7 +28,7 @@ def search():
     """
     Renders the search results page.
     """
-    context = get_context(request)
+    context = functions.get_context(request)
 #    if context.get('query'):
 #        search_words = context['query'].split()
 #        search_dict = {}
@@ -41,7 +41,7 @@ def search():
     dbconnection = DatabaseConnection()
     dbconnection.connect()
     if context.get('query'):
-        indices = build_index_dictionary_from_search_terms(context['query'])
+        indices = functions.build_index_dictionary_from_search_terms(context['query'])
         #indices = dbconnection.query_collection(query=context['query'], collection='invertedindex')
         if indices != None:
             pass
@@ -71,7 +71,7 @@ def spider():
     """
     Renders the spider dashboard page.
     """
-    context = get_context(request)
+    context = functions.get_context(request)
     return render_template("spider.html", context=context)
 
 @app.route("/addspider", methods=["GET","POST"])
