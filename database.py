@@ -33,28 +33,29 @@ class DatabaseConnection():
             self.dbcollection = self.dbconnection[collection]
             self.dbcollection.insert(self.document, safe=True)
 
-    def query_index(self, context=None):
+    def query_collection(self, query=None, collection=None):
         """
         Query data out of the collection
         """
         if self.dbconnection:
-            self.dbcollection = self.dbconnection['invertedindex']
-            self.results = self.dbcollection.find(context)
-            self.returndict = {}
-            self.numitems = 0
-            for items in self.results:
-                if self.numitems == 1:
-                    if not self.returndict.get('$or'):
-                        self.returndict['$or'] = []
-                    try:
-                        self.returndict.pop(['url'])
-                    except:
-                        self.returndict['$or'].append({'url':items['hits']['url']})
-                if self.numitems == 0:
-                    self.returndict['url'] = items['hits']['url']
-                self.numitems += 1
+            self.dbcollection = self.dbconnection[collection]
+            self.results = self.dbcollection.find(query)
+            return self.results
+#            self.returndict = {}
+#            self.numitems = 0
+#            for items in self.results:
+#                if self.numitems == 1:
+#                    if not self.returndict.get('$or'):
+#                        self.returndict['$or'] = []
+#                    try:
+#                        self.returndict.pop(['url'])
+#                    except:
+#                        self.returndict['$or'].append({'url':items['hits']['url']})
+#                if self.numitems == 0:
+#                    self.returndict['url'] = items['hits']['url']
+#                self.numitems += 1
 
-            return self.returndict
+            return self.results
         else:
             return None
 
