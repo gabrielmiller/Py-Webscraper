@@ -30,22 +30,15 @@ def get_query_string(input=None, context={}):
     else:
         return None
 
-def build_index_dictionary_from_search_terms(input=None):
-    """
-    Looks up the search terms in the index and returns a dictionary of the
-    locations of the word(s)
-    """
-    input=input.split()
-    return build_mongo_query(input=input, action="select_indices")
-
-def build_mongo_query(input=None, action=None):
+def build_mongo_query_from_search_terms(input=None, action=None):
     """
     Helper function used to build a mongo query
     """
+    input=input.split()
     result = {}
     if action == "select_indices":
         if len(input)<2:
-            result['word']=input
+            result['word']=input[0]
             pass
         else:
             result['$or']=[]

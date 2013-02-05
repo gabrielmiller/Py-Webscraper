@@ -29,21 +29,13 @@ def search():
     Renders the search results page.
     """
     context = functions.get_context(request)
-#    if context.get('query'):
-#        search_words = context['query'].split()
-#        search_dict = {}
-#        if len(search_words)>1:
-#            search_dict = {'$or':[]}
-#            for item in search_words:
-#                search_dict['$or'].append({'word':item})
-#        else:
-#            search_dict = {'word':search_words[0]}
     dbconnection = DatabaseConnection()
     dbconnection.connect()
     if context.get('query'):
-        indices = functions.build_index_dictionary_from_search_terms(context['query'])
+        mongo_query = functions.build_mongo_query_from_search_terms(context['query'])
+        #indices = functions.build_index_dictionary_from_search_terms(context['query'])
         #indices = dbconnection.query_collection(query=context['query'], collection='invertedindex')
-        if indices != None:
+        if mongo_query != None:
             pass
         else:
             flash('No results were found', category='text-error')
