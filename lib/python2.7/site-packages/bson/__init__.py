@@ -32,7 +32,7 @@ from bson.max_key import MaxKey
 from bson.min_key import MinKey
 from bson.objectid import ObjectId
 from bson.py3compat import b, binary_type
-from bson.son import SON
+from bson.son import SON, RE_TYPE
 from bson.timestamp import Timestamp
 from bson.tz_util import utc
 
@@ -51,9 +51,6 @@ except ImportError:
 
 PY3 = sys.version_info[0] == 3
 
-
-# This sort of sucks, but seems to be as good as it gets...
-RE_TYPE = type(re.compile(""))
 
 MAX_INT32 = 2147483647
 MIN_INT32 = -2147483648
@@ -217,11 +214,15 @@ def _get_boolean(data, position, as_class, tz_aware, uuid_subtype):
 
 
 def _get_date(data, position, as_class, tz_aware, uuid_subtype):
-    seconds = float(struct.unpack("<q", data[position:position + 8])[0]) / 1000.0
+    millis = struct.unpack("<q", data[position:position + 8])[0]
+    diff = millis % 1000
+    seconds = (millis - diff) / 1000
     position += 8
     if tz_aware:
-        return EPOCH_AWARE + datetime.timedelta(seconds=seconds), position
-    return EPOCH_NAIVE + datetime.timedelta(seconds=seconds), position
+        dt = EPOCH_AWARE + datetime.timedelta(seconds=seconds)
+    else:
+        dt = EPOCH_NAIVE + datetime.timedelta(seconds=seconds)
+    return dt.replace(microsecond=diff * 1000), position
 
 
 def _get_code(data, position, as_class, tz_aware, uuid_subtype):

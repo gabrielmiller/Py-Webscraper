@@ -216,7 +216,7 @@ def main():
     for word in inverted_index:
         to_insert = {'word':word,
                      'date':datetime.date.today(),
-                     'offsets':}
+                     'offsets':'BLAH'}
         dbconnection.load_document(to_insert)
         dbconnection.insert_document('inverted_index')
 
