@@ -48,4 +48,13 @@ def build_mongo_query_from_search_terms(input=None, action=None):
         pass
     else:
         pass
-    return result
+    return result, action
+
+def query_mongo(input=None, collection=None, action=None):
+    """
+    Helper function used to submit a mongo query
+    """
+    if input != None and collection != None and action != None:
+        pass
+    else:
+        pass # You done fucked up son
