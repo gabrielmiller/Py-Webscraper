@@ -1,9 +1,8 @@
 import os
-from datetime import datetime
 from flask import render_template, redirect, url_for, request, flash, send_from_directory
 from application import *
 from database import DatabaseConnection
-from functions import get_query_string
+import functions
 
 """
 This module contains the routing for the search front-end of the website.
@@ -21,8 +20,7 @@ def frontpage():
     """
     Renders the search splash page.
     """
-    context={}
-    context['year']=datetime.today().year
+    context = functions.get_context(request)
     return render_template("frontpage.html", context=context)
 
 @app.route("/search")
@@ -30,37 +28,34 @@ def search():
     """
     Renders the search results page.
     """
-    context = get_query_string(request.args)
-    context['year']=datetime.today().year
-    if context['query']:
-        search_words = context['query'].split()
-        search_dict = {}
-        if len(search_words)>1:
-            search_dict = {'$or':[]}
-            for item in search_words:
-                search_dict['$or'].append({'word':item})
+    context = functions.get_context(request)
+    dbconnection = DatabaseConnection()
+    dbconnection.connect()
+    if context.get('query'):
+        mongo_query = functions.build_mongo_query_from_search_terms(context['query'])
+        #indices = functions.build_index_dictionary_from_search_terms(context['query'])
+        #indices = dbconnection.query_collection(query=context['query'], collection='invertedindex')
+        if mongo_query != None:
+            pass
         else:
-            search_dict = {'word':search_words[0]}
-        dbconnection = DatabaseConnection()
-        dbconnection.connect()
-        query_results = dbconnection.query_index(context=search_dict)
-        if query_results == None:
-            context['results1'] = None
-        else:
-            context['results1'] = query_results
-            #context['results1']=[]
-            search_dict2={}
-            #for item in query_results:
-            #    context['results1'].append(item)
-            """
-                if len(item)>1:
-                    search_dict2 = {'$or':[]}
-                    for object in item:
-                         search_dict2['$or'].append({'url':object['url']})
-                else:
-                    for object in item:
-                        search_dict2['url']=object['url']
-            """
+            flash('No results were found', category='text-error')
+#    if query_results == None:
+#        context['results1'] = None
+#    else:
+#        context['results1'] = query_results
+#        #context['results1']=[]
+#        search_dict2={}
+#        #for item in query_results:
+        #    context['results1'].append(item)
+#        
+#            if len(item)>1:
+#                search_dict2 = {'$or':[]}
+#                for object in item:
+#                     search_dict2['$or'].append({'url':object['url']})
+#            else:
+#                for object in item:
+#                    search_dict2['url']=object['url']
+#        
     return render_template("search.html", context=context)
 
 @app.route("/spider")
@@ -68,14 +63,14 @@ def spider():
     """
     Renders the spider dashboard page.
     """
-    context = get_query_string(request.args)
-    context['year']=datetime.today().year
+    context = functions.get_context(request)
     return render_template("spider.html", context=context)
 
-@app.route("/addspider", methods=['POST'])
+@app.route("/addspider", methods=["GET","POST"])
 def addspider():
     """
     Post requests to this url will add a spider.
     """
-    flash('Error: Adding spiders is not yet implemented. Try again later!', category='text-error')
+    if request.method == 'POST':
+        flash('Error: Adding spiders is not yet implemented. Try again later!', category='text-error')
     return redirect(url_for('frontpage'))
