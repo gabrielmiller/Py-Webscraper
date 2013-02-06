@@ -1,5 +1,6 @@
 from datetime import datetime
 from settings import *
+import database
 
 """
 This module contains functions that would otherwise congest my project
@@ -50,11 +51,17 @@ def build_mongo_query_from_search_terms(input=None, action=None):
         pass
     return result, action
 
-def query_mongo(input=None, collection=None, action=None):
+def query_mongo(query=None, collection=None, action=None, db=None):
     """
     Helper function used to submit a mongo query
     """
-    if input != None and collection != None and action != None:
-        pass
+    results = None
+    if query != None and collection != None and action != None and db != None:
+        if action == "select_indices":
+            selected_collection = db.dbconnection[collection]
+            results = selected_collection.find(query)
+        elif action == "select_documents":
+            pass
     else:
         pass # You done fucked up son
+    return results

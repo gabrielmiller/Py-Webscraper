@@ -1,7 +1,7 @@
 import os
 from flask import render_template, redirect, url_for, request, flash, send_from_directory
 from application import *
-from database import DatabaseConnection
+import database
 import functions
 
 """
@@ -29,14 +29,19 @@ def search():
     Renders the search results page.
     """
     context = functions.get_context(request)
-    dbconnection = DatabaseConnection()
+    dbconnection = database.DatabaseConnection()
     dbconnection.connect()
     if context.get('query'):
-        mongo_query, query_action = functions.build_mongo_query_from_search_terms(context['query'])
-        #indices = functions.build_index_dictionary_from_search_terms(context['query'])
-        #indices = dbconnection.query_collection(query=context['query'], collection='invertedindex')
+        mongo_query, action = functions.build_mongo_query_from_search_terms(input=context['query'], action="select_indices")
+        #flash('query: '+str(mongo_query), category='text-info')
         if mongo_query != None:
-            results = functions.query_mongo(input=mongo_query, collection="index", action=query_action)
+            cursor = functions.query_mongo(query=mongo_query, collection="indicies", action=action, db=dbconnection)
+            results = ""
+            for item in cursor:
+                results += str(item['index'])
+            if results:
+                flash('Results were found: '+results, category='text-info')
+            #iterate through results
         else:
             flash('No results were found', category='text-error')
 #    if query_results == None:
