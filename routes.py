@@ -32,11 +32,11 @@ def search():
     dbconnection = DatabaseConnection()
     dbconnection.connect()
     if context.get('query'):
-        mongo_query = functions.build_mongo_query_from_search_terms(context['query'])
+        mongo_query, query_action = functions.build_mongo_query_from_search_terms(context['query'])
         #indices = functions.build_index_dictionary_from_search_terms(context['query'])
         #indices = dbconnection.query_collection(query=context['query'], collection='invertedindex')
         if mongo_query != None:
-            pass
+            results = functions.query_mongo(input=mongo_query, collection="index", action=query_action)
         else:
             flash('No results were found', category='text-error')
 #    if query_results == None:
