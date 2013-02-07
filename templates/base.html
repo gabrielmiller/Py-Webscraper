@@ -15,7 +15,7 @@
 
 <div class="container">
 
-{% if context.DEBUG==True %}<h5>Page context: {{ context }}</h5>{% endif %}
+{% if context.DEBUG==True %}<h5>Page context: {{ context }}</h5><hr><br>{% endif %}
 
 {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
