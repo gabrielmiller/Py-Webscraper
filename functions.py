@@ -1,5 +1,5 @@
 from datetime import datetime
-from settings import *
+import settings
 import database
 
 """
@@ -11,7 +11,7 @@ def get_context(input={}):
     Builds the context dictionary for each response.
     """
     context={'year':datetime.today().year}
-    if DEBUG == True:
+    if settings.DEBUG == True:
         context['DEBUG']=1
     get_query_string(input.args, context)
     return context

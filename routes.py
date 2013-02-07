@@ -41,7 +41,7 @@ def search():
             for item in cursor:
                 results += str(item['index'])
             if results:
-                flash('Results were found: '+results, category='text-info')
+                flash('Results: '+results, category='text-info')
             #iterate through results
         else:
             flash('No results were found', category='text-error')
