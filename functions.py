@@ -31,22 +31,24 @@ def get_query_string(input=None, context={}):
     else:
         return None
 
-def build_mongo_query_from_search_terms(input=None, action=None):
+def build_mongo_query(input=None, action=None):
     """
     Helper function used to build a mongo query
     """
-    input=input.split()
     result = {}
     if action == "select_indices":
+        input=input.split()
         if len(input)<2:
             result['word']=input[0]
-            pass
         else:
             result['$or']=[]
             for item in input:
                 result['$or'].append({'word':item})
-    elif action == "find_indexed_documents":
-        pass
+    elif action == "select_documents":
+        for word in input:
+            for index in word:
+                # Concatenate words and indices to build a query
+                pass
     else:
         pass
     return result, action
@@ -57,11 +59,11 @@ def query_mongo(query=None, collection=None, action=None, db=None):
     """
     results = None
     if query != None and collection != None and action != None and db != None:
+        selected_collection = db.dbconnection[collection]
         if action == "select_indices":
-            selected_collection = db.dbconnection[collection]
             results = selected_collection.find(query)
         elif action == "select_documents":
-            pass
+            results = selected_collection.find(query)
+        return results
     else:
         pass # You done fucked up son
-    return results

@@ -32,10 +32,11 @@ def search():
     dbconnection = database.DatabaseConnection()
     dbconnection.connect()
     if context.get('query'):
-        mongo_query, action = functions.build_mongo_query_from_search_terms(input=context['query'], action="select_indices")
+        mongo_query, action = functions.build_mongo_query(input=context['query'], action="select_indices")
         #flash('query: '+str(mongo_query), category='text-info')
         if mongo_query != None:
             cursor = functions.query_mongo(query=mongo_query, collection="indicies", action=action, db=dbconnection)
+            documents = functions.query_mongo(query=cursor, collection="scraped_documents", action="select_documents")
             results = ""
             for item in cursor:
                 results += str(item['index'])
