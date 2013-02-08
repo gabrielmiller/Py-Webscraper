@@ -61,7 +61,11 @@ def query_mongo(query=None, collection=None, action=None, db=None):
     if query != None and collection != None and action != None and db != None:
         selected_collection = db.dbconnection[collection]
         if action == "select_indices":
-            results = selected_collection.find(query)
+            cursor = selected_collection.find(query)
+            results = {}
+            for item in cursor:
+                #iterate through BSON and build a single dictionary for the document lookup
+                results[] = item['index']
         elif action == "select_documents":
             results = selected_collection.find(query)
         return results
