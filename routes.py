@@ -46,22 +46,6 @@ def search():
             #iterate through results
         else:
             flash('No results were found', category='text-error')
-#    if query_results == None:
-#        context['results1'] = None
-#    else:
-#        context['results1'] = query_results
-#        #context['results1']=[]
-#        search_dict2={}
-#        #for item in query_results:
-        #    context['results1'].append(item)
-#        
-#            if len(item)>1:
-#                search_dict2 = {'$or':[]}
-#                for object in item:
-#                     search_dict2['$or'].append({'url':object['url']})
-#            else:
-#                for object in item:
-#                    search_dict2['url']=object['url']
 #        
     return render_template("search.html", context=context)
 
