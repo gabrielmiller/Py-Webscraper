@@ -19,20 +19,6 @@ class DatabaseConnection():
                 sys.exit(1)
         self.dbconnection = connection["ex14"]
 
-    def load_document(self, document):
-        """
-        Record the document to that was passed in as a dictionary
-        """
-        self.document = document
-
-    def insert_document(self, collection='junkdata'):
-        """
-        Insert the document into the database, into the provided collection
-        """
-        if self.document and self.dbconnection:
-            self.dbcollection = self.dbconnection[collection]
-            self.dbcollection.insert(self.document, safe=True)
-
     def query_collection(self, query=None, collection=None):
         """
         Query data out of the collection
