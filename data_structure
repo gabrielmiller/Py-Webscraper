@@ -12,4 +12,10 @@ for the index:
 
 for the webpages:
 
-# To be determined
+{'url':'http://goatse.cx/index.html',
+ 'html':'<html><head>--full html page document--</html></head>',  #might not be necessary.
+ 'pagetext':'--full page text, stripped out of header, anchor, list, etc. tags--',
+ 'pagerank':integer value of pagerank,
+ 'title':'page title, stripped from head->title element',
+ 'scrapedate':python datetime object,
+ 'flavor':'???'}
