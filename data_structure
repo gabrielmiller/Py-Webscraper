@@ -1,0 +1,15 @@
+Data structure is as follows:
+
+for the index:
+
+{'word':'bicycle',
+ 'index':{'http://goatse.cx/index.html':[1,27,125],
+          'http://goatse.cx/hello.html':[12],
+          'http://goatse.cx/about.html':[15,1660]
+         }
+}
+
+
+for the webpages:
+
+# To be determined

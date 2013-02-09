@@ -65,8 +65,9 @@ def query_mongo(query=None, collection=None, action=None, db=None):
             results = {}
             for item in cursor:
                 #iterate through BSON and build a single dictionary for the document lookup
-                results[] = item['index']
+                results[item['word']] = item['index']
         elif action == "select_documents":
+            #derp
             results = selected_collection.find(query)
         return results
     else:
