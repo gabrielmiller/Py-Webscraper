@@ -72,3 +72,15 @@ def query_mongo(query=None, collection=None, action=None, db=None):
         return results
     else:
         pass # You done fucked up son
+
+def combine_dictionaries(input=None):
+    """
+    Helper function that combines dictionaries fed to it.
+    """
+    output = {}
+    it type(input)=list:
+        for each_dictionary in input:
+            for entry in each_dictionary:
+                output['each_dictionary'] = entry
+    else:
+        return "error"
