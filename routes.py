@@ -36,15 +36,15 @@ def search():
         mongo_query, action = functions.build_mongo_query(input=context['query'], action="select_indices")
         #flash('query: '+str(mongo_query), category='text-info')
         if mongo_query != None:
-            cursor = functions.query_mongo(query=mongo_query, collection=settings.COLLECTION_INDEX, action=action, db=dbconnection)
-            if cursor.count() > 1:
+            cursor, cursor_count = functions.query_mongo(query=mongo_query, collection=settings.COLLECTION_INDEX, action=action, db=dbconnection)
+            if cursor_count > 1:
                 cursor = functions.combine_dictionaries(cursor)
             #documents = functions.query_mongo(query=cursor, collection=settings.COLLECTION_DOCUMENTS, action="select_documents")
-            results = ""
-            for item in cursor:
-                results += str(item)
-            if results:
-                flash('Results: '+str(cursor), category='text-info')
+            #results = ""
+            #for item in cursor:
+            #    results += str(item)
+            #if results:
+            flash('Results: '+str(cursor), category='text-info')
             #iterate through results
         else:
             flash('No results were found', category='text-error')

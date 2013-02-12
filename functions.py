@@ -63,13 +63,13 @@ def query_mongo(query=None, collection=None, action=None, db=None):
         if action == "select_indices":
             cursor = selected_collection.find(query)
             results = {}
+            results_count = cursor.count()
             for item in cursor:
-                #iterate through BSON and build a single dictionary for the document lookup
                 results[item['word']] = item['index']
         elif action == "select_documents":
             #derp
             results = selected_collection.find(query)
-        return results
+        return results, results_count
     else:
         pass # You done fucked up son
 
@@ -78,9 +78,9 @@ def combine_dictionaries(input=None):
     Helper function that combines dictionaries fed to it.
     """
     output = {}
-    it type(input)=list:
-        for each_dictionary in input:
-            for entry in each_dictionary:
+    if type(input)==dict:
+        for sub_dictionary in input:
+            for entry in sub_dictionary:
                 output['each_dictionary'] = entry
     else:
         return "error"
