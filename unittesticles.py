@@ -17,6 +17,7 @@ class DatabaseTests(unittest.TestCase):
 
     def setUp(self):
         self.dbconnection = database.DatabaseConnection()
+        self.dbconnection.connect()
 
     def test_a_search_query_is_built_from_the_input(self):
         """
@@ -29,13 +30,13 @@ class DatabaseTests(unittest.TestCase):
         """
         Tests a search of two words with known results for the expected result.
         """
-        search_query="word1 word2"
-        expected_result={u'word1':{u'url4': u'6', u'url1': 9, u'url3': [1, 3, 4], u'url2': 1},
-                         u'word2':{u'url4': [5], u'url1': [6], u'url3': [12], u'url2': 74}}
-        query, action =functions.build_mongo_query(input=search_query, action="select_indices")
-        cursor, cursor_count = functions.query_mongo(query=query, collection="indicies", action=action, db=self.dbconnection)
-        indices = functions.combine_dictionaries(cursor)
-        assertEqual(indices, expected_result), "Test of two known search results does not give the correct response."
+        self.search_query="word1 word2"
+        self.expected_result={u'word1':{u'url4': u'6', u'url1': 9, u'url3': [1, 3, 4], u'url2': 1},
+                              u'word2':{u'url4': [5], u'url1': [6], u'url3': [12], u'url2': 74}}
+        self.query, self.action =functions.build_mongo_query(input=self.search_query, action="select_indices")
+        self.cursor, self.cursor_count = functions.query_mongo(query=self.query, collection="indicies", action=self.action, db=self.dbconnection)
+        self.indices = functions.combine_dictionaries(self.cursor)
+        self.assertEqual(self.indices, self.expected_result), "Test of two known search results does not give the correct response."
 
 class FunctionTests(unittest.TestCase):
     """
