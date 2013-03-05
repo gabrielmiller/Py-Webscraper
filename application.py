@@ -1,5 +1,4 @@
 from flask import Flask
-
 """
 This module contains the application boilerplate for the website front-end
 of this web application.

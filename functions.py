@@ -73,14 +73,18 @@ def query_mongo(query=None, collection=None, action=None, db=None):
     else:
         pass # You done fucked up son
 
-def combine_dictionaries(input=None):
+def combine_cursors(input=None):
     """
-    Helper function that combines dictionaries fed to it.
+    Helper function that combines dictionary cursors fed to it.
     """
     output = {}
     if type(input)==dict:
-        for sub_dictionary in input:
-            for entry in sub_dictionary:
-                output['each_dictionary'] = entry
+        for subdictionary_key in input:
+            for item_key in input[subdictionary_key]:
+                if output.get(item_key):
+                    output[item_key] = output[item_key] + input[subdictionary_key][item_key]
+                else:
+                    output[item_key] = input[subdictionary_key][item_key]
+        return output
     else:
-        return "error"
+        return "Error: You didn't feed me a dictionary"

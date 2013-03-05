@@ -37,8 +37,11 @@ def search():
         #flash('query: '+str(mongo_query), category='text-info')
         if mongo_query != None:
             cursor, cursor_count = functions.query_mongo(query=mongo_query, collection=settings.COLLECTION_INDEX, action=action, db=dbconnection)
+            context['cursor'] = cursor
+            context['cursor_count'] = cursor_count
             if cursor_count > 1:
-                cursor = functions.combine_dictionaries(cursor)
+                cursor = functions.combine_cursors(cursor)
+            context['combined_cursor'] = cursor
             #documents = functions.query_mongo(query=cursor, collection=settings.COLLECTION_DOCUMENTS, action="select_documents")
             #results = ""
             #for item in cursor:
