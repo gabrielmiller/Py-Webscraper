@@ -1,5 +1,6 @@
 from pymongo import Connection
 from pymongo.errors import ConnectionFailure
+from settings import *
 
 class DatabaseConnection():
     """
@@ -11,7 +12,7 @@ class DatabaseConnection():
         Establishes a database connection
         """
         try:
-            connection = Connection(host="localhost", port=27017)
+            connection = Connection(host=DATABASE_HOST, port=DATABASE_PORT)
         except ConnectionFailure, error:
             return "Could not connect to database: %s" % error
             print "Could not connect to database: %s \n" % error

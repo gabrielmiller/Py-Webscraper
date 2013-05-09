@@ -2,6 +2,11 @@
 This module contains site settings.
 """
 
-DEBUG = True # Prints out query variables on the page
-COLLECTION_INDEX = 'indicies'
-COLLECTION_DOCUMENTS = 'scraped_documents'
+# Print query variables to the page
+DEBUG = True
+COLLECTION_INDEX = 'toastie_index'
+COLLECTION_DOCUMENTS = 'toastie_pages'
+
+#Database Settings
+DATABASE_HOST = '127.0.0.1'
+DATABASE_PORT = 27017
