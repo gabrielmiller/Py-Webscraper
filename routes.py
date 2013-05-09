@@ -2,7 +2,7 @@ import os
 from flask import render_template, redirect, url_for, request, flash, send_from_directory
 from application import *
 import database
-import functions
+import helpers
 import settings
 
 """
@@ -21,7 +21,7 @@ def frontpage():
     """
     Renders the search splash page.
     """
-    context = functions.get_context(request)
+    context = helpers.get_context(request)
     return render_template("frontpage.html", context=context)
 
 @app.route("/search")
@@ -29,20 +29,20 @@ def search():
     """
     Renders the search results page.
     """
-    context = functions.get_context(request)
+    context = helpers.get_context(request)
     dbconnection = database.DatabaseConnection()
     dbconnection.connect()
     if context.get('query'):
-        mongo_query, action = functions.build_mongo_query(input=context['query'], action="select_indices")
+        mongo_query, action = helpers.build_mongo_query(input=context['query'], action="select_indices")
         #flash('query: '+str(mongo_query), category='text-info')
         if mongo_query != None:
-            cursor, cursor_count = functions.query_mongo(query=mongo_query, collection=settings.COLLECTION_INDEX, action=action, db=dbconnection)
+            cursor, cursor_count = helpers.query_mongo(query=mongo_query, collection=settings.COLLECTION_INDEX, action=action, db=dbconnection)
             context['cursor'] = cursor
             context['cursor_count'] = cursor_count
             if cursor_count > 1:
-                cursor = functions.combine_cursors(cursor)
+                cursor = helpers.combine_cursors(cursor)
             context['combined_cursor'] = cursor
-            #documents = functions.query_mongo(query=cursor, collection=settings.COLLECTION_DOCUMENTS, action="select_documents")
+            #documents = helpers.query_mongo(query=cursor, collection=settings.COLLECTION_DOCUMENTS, action="select_documents")
             #results = ""
             #for item in cursor:
             #    results += str(item)
@@ -59,7 +59,7 @@ def spider():
     """
     Renders the spider dashboard page.
     """
-    context = functions.get_context(request)
+    context = helpers.get_context(request)
     return render_template("spider.html", context=context)
 
 @app.route("/addspider", methods=["GET","POST"])

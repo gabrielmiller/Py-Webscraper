@@ -3,7 +3,7 @@ import settings
 import database
 
 """
-This module contains functions that would otherwise congest my project
+This module contains helper functions.
 """
 
 def get_context(input={}):

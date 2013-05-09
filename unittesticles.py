@@ -3,7 +3,7 @@ from random import randint
 from spider import *
 from routes import *
 import database
-import functions
+import helpers
 
 """
 This module will include all of the unit tests
@@ -33,14 +33,14 @@ class DatabaseTests(unittest.TestCase):
         self.search_query="word1 word2"
         self.expected_result={u'word1':{u'url4': u'6', u'url1': 9, u'url3': [1, 3, 4], u'url2': 1},
                               u'word2':{u'url4': [5], u'url1': [6], u'url3': [12], u'url2': 74}}
-        self.query, self.action =functions.build_mongo_query(input=self.search_query, action="select_indices")
-        self.cursor, self.cursor_count = functions.query_mongo(query=self.query, collection="indicies", action=self.action, db=self.dbconnection)
-        self.indices = functions.combine_dictionaries(self.cursor)
+        self.query, self.action =helpers.build_mongo_query(input=self.search_query, action="select_indices")
+        self.cursor, self.cursor_count = helpers.query_mongo(query=self.query, collection="indicies", action=self.action, db=self.dbconnection)
+        self.indices = helpers.combine_dictionaries(self.cursor)
         self.assertEqual(self.indices, self.expected_result), "Test of two known search results does not give the correct response."
 
 class FunctionTests(unittest.TestCase):
     """
-    This test suite contains tests on the Functions module.
+    This test suite contains tests on the Helper functions module.
     """
 
     def setUp(self):
@@ -52,7 +52,7 @@ class FunctionTests(unittest.TestCase):
 #        """
 #        self.test_function_input = "thisisaword"
 #        self.expected_function_output = {'word':'thisisaword'}
-#        self.a = functions.build_mongo_query(input=self.test_function_input, action="select_indices")
+#        self.a = helpers.build_mongo_query(input=self.test_function_input, action="select_indices")
 #        self.assertEqual(self.a, self.expected_function_output), "Searching for one word is not building the proper mongo query"
 #
 #    def test_building_a_two_word_mongo_query(self):
@@ -61,7 +61,7 @@ class FunctionTests(unittest.TestCase):
 #        """
 #        self.test_function_input = "two words"
 #        self.expected_function_output = {'$or':[{'word':'two'},{'word':'words'}]}
-#        self.a = functions.build_mongo_query(input=self.test_function_input, action="select_indices")
+#        self.a = helpers.build_mongo_query(input=self.test_function_input, action="select_indices")
 #        self.assertEqual(self.a, self.expected_function_output), "A case for two words is not building the proper mongo query"
 #
 #    def test_building_a_three_word_mongo_query(self):
@@ -70,7 +70,7 @@ class FunctionTests(unittest.TestCase):
 #        """
 #        self.test_function_input = "there are three"
 #        self.expected_function_output = {'$or':[{'word':'there'},{'word':'are'},{'word':'three'}]}
-#        self.a = functions.build_mongo_query(input=self.test_function_input, action="select_indices")
+#        self.a = helpers.build_mongo_query(input=self.test_function_input, action="select_indices")
 #        self.assertEqual(self.a, self.expected_function_output), "A test for three words is not building the proper mongo query"
 
 class SpiderTests(unittest.TestCase):
