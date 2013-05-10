@@ -11,6 +11,7 @@ Python, Flask, Werkzeug, Jinja, Requests, urlparse, re, robotparser, pymongo, Mo
     source bin/activate
     bin/pip install flask
     bin/pip install pymongo
+    bin/pip install BeautifulSoup
     deactivate
 
 # Run the Application

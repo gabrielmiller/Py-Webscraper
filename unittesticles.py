@@ -1,5 +1,6 @@
 import unittest
 from random import randint
+from settings import *
 from spider import *
 from routes import *
 import database
@@ -26,18 +27,19 @@ class DatabaseTests(unittest.TestCase):
         """
         pass
 
-    def test_a_known_search_of_two_words_returns_expected_indices(self):
-        """
-        Tests a search of two words with known results for the expected result.
-        """
-        self.search_query="word1 word2"
-        self.expected_result={u'word1':{u'url4': u'6', u'url1': 9, u'url3': [1, 3, 4], u'url2': 1},
-                              u'word2':{u'url4': [5], u'url1': [6], u'url3': [12], u'url2': 74}}
-        self.query, self.action =helpers.build_mongo_query(input=self.search_query, action="select_indices")
-        self.cursor, self.cursor_count = helpers.query_mongo(query=self.query, collection="indicies", action=self.action, db=self.dbconnection)
-        self.indices = helpers.combine_dictionaries(self.cursor)
-        self.assertEqual(self.indices, self.expected_result), "Test of two known search results does not give the correct response."
-
+#   This test requires a db with specific data.
+#    def test_a_known_search_of_two_words_returns_expected_indices(self):
+#        """
+#        Tests a search of two words with known results for the expected result.
+#        """
+#        self.search_query="word1 word2"
+#        self.expected_result={u'word1':{u'url4': u'6', u'url1': 9, u'url3': [1, 3, 4], u'url2': 1},
+#                              u'word2':{u'url4': [5], u'url1': [6], u'url3': [12], u'url2': 74}}
+#        self.query, self.action = helpers.build_mongo_query(input=self.search_query, action="select_indices")
+#        self.cursor, self.cursor_count = helpers.query_mongo(query=self.query, collection=COLLECTION_INDEX, action=self.action, db=self.dbconnection)
+#        self.indices = helpers.combine_cursors(self.cursor)
+#        self.assertEqual(self.indices, self.expected_result), "Test of two known search results does not give the correct response."
+#
 class FunctionTests(unittest.TestCase):
     """
     This test suite contains tests on the Helper functions module.
@@ -204,7 +206,7 @@ class SpiderTests(unittest.TestCase):
         """
         Test the results coming out of the pagerank algorithm.
         Note: the results of this assert do not pass unit test because they are
-        unrounded floats, however they are equivalent enough values for our
+        unrounded floats, however they are 'equivalent enough' values for our
         search engine purposes.
         """
 
