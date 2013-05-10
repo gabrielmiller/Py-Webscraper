@@ -8,7 +8,7 @@ This module contains helper functions.
 
 def get_context(input={}):
     """
-    Builds the context dictionary for each response.
+    Builds the page context dictionary for each response.
     """
     context={'year':datetime.today().year}
     if settings.DEBUG == True:
@@ -18,7 +18,7 @@ def get_context(input={}):
 
 def get_query_string(input=None, context={}):
     """
-    Checks the querystring for the parameter "query" and returns its value if
+    Checks the query string for the parameter "query" and returns its value if
     present. If that parameter is not present it returns null.
     """
     if input:
@@ -33,7 +33,7 @@ def get_query_string(input=None, context={}):
 
 def build_mongo_query(input=None, action=None):
     """
-    Helper function used to build a mongo query
+    Helper function used to build mongo queries
     """
     result = {}
     if action == "select_indices":
@@ -44,6 +44,7 @@ def build_mongo_query(input=None, action=None):
             result['$or']=[]
             for item in input:
                 result['$or'].append({'word':item})
+
     elif action == "select_documents":
         for word in input:
             for index in word:
@@ -75,7 +76,7 @@ def query_mongo(query=None, collection=None, action=None, db=None):
 
 def combine_cursors(input=None):
     """
-    Helper function that combines dictionary cursors fed to it.
+    Helper function that combines cursor dictionaries fed to it.
     """
     output = {}
     if type(input)==dict:
