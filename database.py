@@ -18,4 +18,4 @@ class DatabaseConnection():
             print "Could not connect to database: %s \n" % error
             if __name__ == "spider":
                 sys.exit(1)
-        self.dbconnection = connection["ex14"]
+        self.dbconnection = connection[DATABASE_NAME]
