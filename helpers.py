@@ -6,6 +6,14 @@ import database
 This module contains helper functions.
 """
 
+def remove_duplicate_dictionaries(input):
+    """
+    Removes duplicate dictionarise from a list of dictionaries.
+    """
+    if type(input) != list:
+        raise("remove_duplicate_dictionaries requires a list input.")
+    return [dict(tupleized) for tupleized in set(tuple(item.items()) for item in input)]
+
 def get_context(input={}):
     """
     Builds the page context dictionary for each response.
@@ -52,16 +60,20 @@ def build_mongo_pages_query(input=None):
     result, hits = {}, {}
     result['$or'] = []
     if len(input) > 1:
-        for item in input:
-            for subitem in item:
-                for subitem in input[item]:
-                    hits[subitem] = input[item][subitem]
-                    result['$or'].append({'url':subitem})
+        for word in input:
+            for url in input[word]:
+                #print url, word
+                result['$or'].append({'url':url})
+                #if(hits.get(url)):
+                #    hits[url].append
+                #else:
+                #    hits[url] = []
+        result['$or'] = remove_duplicate_dictionaries(result['$or'])
     else:
-        for word_dict in input:
-            for word in input[word_dict]:
-                hits[word] = input[word_dict][word]
-                result['$or'].append({'url':word})
+        for search_word in input:
+            for url in input[search_word]:
+                hits[url] = input[search_word][url]
+                result['$or'].append({'url':url})
     return result, hits
 
 def query_mongo_index(query=None, collection=None, db=None):

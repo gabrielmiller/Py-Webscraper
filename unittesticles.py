@@ -50,8 +50,8 @@ class FunctionTests(unittest.TestCase):
         """
         self.test_function_input = "thisisaword"
         self.expected_function_output = {'word':'thisisaword'}
-        self.a = helpers.build_mongo_index_query(input=self.test_function_input)
-        self.assertEqual(self.a, self.expected_function_output), "Searching for one word is not building the proper mongo index query"
+        self.result = helpers.build_mongo_index_query(input=self.test_function_input)
+        self.assertEqual(self.result, self.expected_function_output), "Searching for one word is not building the proper mongo index query"
 
     def test_building_a_two_word_mongo_index_query(self):
         """
@@ -59,8 +59,8 @@ class FunctionTests(unittest.TestCase):
         """
         self.test_function_input = "two words"
         self.expected_function_output = {'$or':[{'word':'two'},{'word':'words'}]}
-        self.a = helpers.build_mongo_index_query(input=self.test_function_input)
-        self.assertEqual(self.a, self.expected_function_output), "A case for two words is not building the proper mongo index query"
+        self.result = helpers.build_mongo_index_query(input=self.test_function_input)
+        self.assertEqual(self.result, self.expected_function_output), "A case for two words is not building the proper mongo index query"
 
     def test_building_a_three_word_mongo_index_query(self):
         """
@@ -68,8 +68,8 @@ class FunctionTests(unittest.TestCase):
         """
         self.test_function_input = "there are three"
         self.expected_function_output = {'$or':[{'word':'there'},{'word':'are'},{'word':'three'}]}
-        self.a = helpers.build_mongo_index_query(input=self.test_function_input)
-        self.assertEqual(self.a, self.expected_function_output), "A test for three words is not building the proper mongo index query"
+        self.result = helpers.build_mongo_index_query(input=self.test_function_input)
+        self.assertEqual(self.result, self.expected_function_output), "A test for three words is not building the proper mongo index query"
 
     def test_building_a_one_word_mongo_pages_query(self):
         """
@@ -78,9 +78,21 @@ class FunctionTests(unittest.TestCase):
         self.test_input_cursor = {'word1': {'url1':[9], 'url2':[1], 'url3':[1,3,4], 'url4':[6]}}
         self.expected_output = {'$or':[{'url':'url4'},{'url':'url1'},{'url':'url3'},{'url':'url2'}]}
         self.expected_hits = {'url1':[9], 'url2':[1], 'url3':[1,3,4], 'url4':[6]}
-        self.a, self.hits = helpers.build_mongo_pages_query(input=self.test_input_cursor)
-        self.assertEqual(self.a, self.expected_output), "Building a page query for a one word search is broken."
+        self.result, self.hits = helpers.build_mongo_pages_query(input=self.test_input_cursor)
+        self.assertEqual(self.result, self.expected_output), "Building a page query for a one word search is broken."
         self.assertEqual(self.hits, self.expected_hits), "Building a page word hits list for a one word search is broken."
+
+    def test_building_a_two_word_mongo_pages_query(self):
+        """
+        Tests if a two word search will build the proper mongo pages query.
+        """
+        self.test_input_cursor = {'word1': {'url1':[9], 'url2':[1], 'url3':[1,3,4], 'url4':[6]},
+                                  'word2': {'url1':[6], 'url2': [74], 'url3': [12], 'url4': [5]}}
+        self.expected_output = {'$or':[{'url':'url1'},{'url':'url4'},{'url':'url2'},{'url':'url3'}]}
+        self.expected_hits = {'url1':[6,9], 'url2':[1,74], 'url3':[1,3,4,12], 'url4':[5,6]}
+        self.result, self.hits = helpers.build_mongo_pages_query(input=self.test_input_cursor)
+        self.assertEqual(self.result, self.expected_output), "Building a page query for a two word search is broken."
+        #self.assertEqual(self.hits, self.expected_hits), "Building a page word hits list for a two word search is broken."
 
 class SpiderTests(unittest.TestCase):
     """
