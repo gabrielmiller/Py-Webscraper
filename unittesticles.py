@@ -76,9 +76,9 @@ class FunctionTests(unittest.TestCase):
         Tests if a one word search will build the proper mongo pages query.
         """
         self.test_input_cursor = {'word1': {'url1':[9], 'url2':[1], 'url3':[1,3,4], 'url4':[6]}}
-        self.expected_output = {'$or':[{'url':'url1'},{'url':'url2'},{'url':'url3'},{'url':'url4'}]}
+        self.expected_output = {'$or':[{'url':'url4'},{'url':'url1'},{'url':'url3'},{'url':'url2'}]}
 
-        self.a = helpers.build_mongo_pages_query(input=self.test_input_cursor)
+        self.a, self.hits = helpers.build_mongo_pages_query(input=self.test_input_cursor)
         self.assertEqual(self.a, self.expected_output), "A test for three words is not building the proper mongo pages query"
 
 class SpiderTests(unittest.TestCase):

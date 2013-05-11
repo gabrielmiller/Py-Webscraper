@@ -37,7 +37,7 @@ def build_mongo_index_query(input=None):
     """
     result = {}
     input=input.split()
-    if len(input)<2:
+    if len(input) < 2:
         result['word']=input[0]
     else:
         result['$or']=[]
@@ -50,12 +50,18 @@ def build_mongo_pages_query(input=None):
     Builds a mongo query to look up documents from the given cursor.
     """
     result = {}
-    #input=input.split()
-    #for word in input:
-    #    for index in word:
-    #        pass
-    #        # Concatenate words and indices to build a query
-    return result
+    hits = {}
+    if len(input) < 1:
+        for item in input:
+            result['url']=input
+            #hits[item] = blah
+    else:
+        result['$or'] = []
+        for item in input:
+            for subitem in input[item]:
+                hits[subitem] = input[item][subitem]
+                result['$or'].append({'url':subitem})
+    return result, hits
 
 def query_mongo_index(query=None, collection=None, db=None):
     """
