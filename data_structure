@@ -19,3 +19,25 @@ for the webpages:
  'title':'page title, stripped from head->title element',
  'scrapedate':python datetime object,
  'flavor':'???'}
+
+test indices php array-style:
+array (
+    "word"=>"word1",
+     "index"=>array(
+              "url1"=>[9],
+              "url2"=>[1],
+              "url3"=>[1,3,4],
+              "url4"=>[6]
+    )
+)
+
+array (
+    "word"=>"word2",
+     "index"=>array(
+              "url1"=>[6],
+              "url2"=>[74],
+              "url3"=>[12],
+              "url4"=>[5]
+    )
+)
+
