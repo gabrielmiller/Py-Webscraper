@@ -7,7 +7,7 @@ import database
 import helpers
 
 """
-This module will include all of the unit tests
+This module includes all of the unit tests.
 """
 
 class DatabaseTests(unittest.TestCase):
