@@ -12,7 +12,7 @@ def remove_duplicate_dictionaries(input):
     """
     if type(input) != list:
         raise("remove_duplicate_dictionaries requires a list input.")
-    return [dict(tupleized) for tupleized in set(tuple(item.items()) for item in input)]
+    return [dict(a_tuple) for a_tuple in set(tuple(item.items()) for item in input)]
 
 def get_context(input={}):
     """

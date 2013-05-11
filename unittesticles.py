@@ -92,7 +92,7 @@ class FunctionTests(unittest.TestCase):
         self.expected_hits = {'url1':[6,9], 'url2':[1,74], 'url3':[1,3,4,12], 'url4':[5,6]}
         self.result, self.hits = helpers.build_mongo_pages_query(input=self.test_input_cursor)
         self.assertEqual(self.result, self.expected_output), "Building a page query for a two word search is broken."
-        #self.assertEqual(self.hits, self.expected_hits), "Building a page word hits list for a two word search is broken."
+        self.assertEqual(self.hits, self.expected_hits), "Building a page word hits list for a two word search is broken."
 
 class SpiderTests(unittest.TestCase):
     """
