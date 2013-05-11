@@ -77,9 +77,10 @@ class FunctionTests(unittest.TestCase):
         """
         self.test_input_cursor = {'word1': {'url1':[9], 'url2':[1], 'url3':[1,3,4], 'url4':[6]}}
         self.expected_output = {'$or':[{'url':'url4'},{'url':'url1'},{'url':'url3'},{'url':'url2'}]}
-
+        self.expected_hits = {'url1':[9], 'url2':[1], 'url3':[1,3,4], 'url4':[6]}
         self.a, self.hits = helpers.build_mongo_pages_query(input=self.test_input_cursor)
-        self.assertEqual(self.a, self.expected_output), "A test for three words is not building the proper mongo pages query"
+        self.assertEqual(self.a, self.expected_output), "Building a page query for a one word search is broken."
+        self.assertEqual(self.hits, self.expected_hits), "Building a page word hits list for a one word search is broken."
 
 class SpiderTests(unittest.TestCase):
     """
