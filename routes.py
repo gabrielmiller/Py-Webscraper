@@ -33,10 +33,10 @@ def search():
     dbconnection = database.DatabaseConnection()
     dbconnection.connect()
     if context.get('query'):
-        mongo_query, action = helpers.build_mongo_query(input=context['query'], action="select_indices")
+        mongo_query = helpers.build_mongo_index_query(input=context['query'])
         #flash('query: '+str(mongo_query), category='text-info')
         if mongo_query != None:
-            cursor, cursor_count = helpers.query_mongo(query=mongo_query, collection=settings.COLLECTION_INDEX, action=action, db=dbconnection)
+            cursor, cursor_count = helpers.query_mongo_index(query=mongo_query, collection=settings.COLLECTION_INDEX, db=dbconnection)
             context['cursor'] = cursor
             context['cursor_count'] = cursor_count
             if cursor_count > 1:

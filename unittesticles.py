@@ -12,8 +12,7 @@ This module includes all of the unit tests.
 
 class DatabaseTests(unittest.TestCase):
     """
-    This test suite contains tests on the functionality provided by the
-    database module.
+    Tests database functions.
     """
 
     def setUp(self):
@@ -27,58 +26,57 @@ class DatabaseTests(unittest.TestCase):
         """
         pass
 
-#   This test requires a db with specific data.
-#    def test_a_known_search_of_two_words_returns_expected_indices(self):
-#        """
-#        Tests a search of two words with known results for the expected result.
-#        """
-#        self.search_query="word1 word2"
-#        self.expected_result={u'word1':{u'url4': u'6', u'url1': 9, u'url3': [1, 3, 4], u'url2': 1},
-#                              u'word2':{u'url4': [5], u'url1': [6], u'url3': [12], u'url2': 74}}
-#        self.query, self.action = helpers.build_mongo_query(input=self.search_query, action="select_indices")
-#        self.cursor, self.cursor_count = helpers.query_mongo(query=self.query, collection=COLLECTION_INDEX, action=self.action, db=self.dbconnection)
-#        self.indices = helpers.combine_cursors(self.cursor)
-#        self.assertEqual(self.indices, self.expected_result), "Test of two known search results does not give the correct response."
-#
+   #This test requires a db with specific data.
+    def test_a_known_search_of_two_words_returns_expected_indices(self):
+        """
+        Tests a search of two words with known results for the expected result.
+        """
+        self.search_query="word1 word2"
+        self.expected_result={u'word1':{u'url4': u'6', u'url1': 9, u'url3': [1, 3, 4], u'url2': 1},
+                              u'word2':{u'url4': [5], u'url1': [6], u'url3': [12], u'url2': 74}}
+        self.query = helpers.build_mongo_index_query(input=self.search_query)
+        self.cursor, self.cursor_count = helpers.query_mongo_index(query=self.query, collection=COLLECTION_INDEX, db=self.dbconnection)
+        self.indices = helpers.combine_cursors(self.cursor)
+        self.assertEqual(self.indices, self.expected_result), "Test of two known search results does not give the correct response."
+
 class FunctionTests(unittest.TestCase):
     """
-    This test suite contains tests on the Helper functions module.
+    Tests functions in the Helper functions module.
     """
 
     def setUp(self):
         pass
 
-#    def test_building_a_single_word_mongo_query(self):
-#        """
-#        Tests if a single word searched will build the proper mongo query.
-#        """
-#        self.test_function_input = "thisisaword"
-#        self.expected_function_output = {'word':'thisisaword'}
-#        self.a = helpers.build_mongo_query(input=self.test_function_input, action="select_indices")
-#        self.assertEqual(self.a, self.expected_function_output), "Searching for one word is not building the proper mongo query"
-#
-#    def test_building_a_two_word_mongo_query(self):
-#        """
-#        Tests if a two word search will build the proper mongo query.
-#        """
-#        self.test_function_input = "two words"
-#        self.expected_function_output = {'$or':[{'word':'two'},{'word':'words'}]}
-#        self.a = helpers.build_mongo_query(input=self.test_function_input, action="select_indices")
-#        self.assertEqual(self.a, self.expected_function_output), "A case for two words is not building the proper mongo query"
-#
-#    def test_building_a_three_word_mongo_query(self):
-#        """
-#        Tests if a two word search will build the proper mongo query.
-#        """
-#        self.test_function_input = "there are three"
-#        self.expected_function_output = {'$or':[{'word':'there'},{'word':'are'},{'word':'three'}]}
-#        self.a = helpers.build_mongo_query(input=self.test_function_input, action="select_indices")
-#        self.assertEqual(self.a, self.expected_function_output), "A test for three words is not building the proper mongo query"
+    def test_building_a_single_word_mongo_query(self):
+        """
+        Tests if a single word searched will build the proper mongo query.
+        """
+        self.test_function_input = "thisisaword"
+        self.expected_function_output = {'word':'thisisaword'}
+        self.a = helpers.build_mongo_index_query(input=self.test_function_input)
+        self.assertEqual(self.a, self.expected_function_output), "Searching for one word is not building the proper mongo query"
+
+    def test_building_a_two_word_mongo_query(self):
+        """
+        Tests if a two word search will build the proper mongo query.
+        """
+        self.test_function_input = "two words"
+        self.expected_function_output = {'$or':[{'word':'two'},{'word':'words'}]}
+        self.a = helpers.build_mongo_index_query(input=self.test_function_input)
+        self.assertEqual(self.a, self.expected_function_output), "A case for two words is not building the proper mongo query"
+
+    def test_building_a_three_word_mongo_query(self):
+        """
+        Tests if a two word search will build the proper mongo query.
+        """
+        self.test_function_input = "there are three"
+        self.expected_function_output = {'$or':[{'word':'there'},{'word':'are'},{'word':'three'}]}
+        self.a = helpers.build_mongo_index_query(input=self.test_function_input)
+        self.assertEqual(self.a, self.expected_function_output), "A test for three words is not building the proper mongo query"
 
 class SpiderTests(unittest.TestCase):
     """
-    This test suite contains tests on the functionality provided by the spider
-    module.
+    Tests functions in the spider module.
     """
 
     def setUp(self):

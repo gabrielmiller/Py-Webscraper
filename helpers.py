@@ -31,52 +31,55 @@ def get_query_string(input=None, context={}):
     else:
         return None
 
-def build_mongo_query(input=None, action=None):
+def build_mongo_index_query(input=None):
     """
-    Helper function used to build mongo queries
+    Builds a mongo query to look up indices from the given cursor.
     """
     result = {}
-    if action == "select_indices":
-        input=input.split()
-        if len(input)<2:
-            result['word']=input[0]
-        else:
-            result['$or']=[]
-            for item in input:
-                result['$or'].append({'word':item})
-
-    elif action == "select_documents":
-        for word in input:
-            for index in word:
-                # Concatenate words and indices to build a query
-                pass
+    input=input.split()
+    if len(input)<2:
+        result['word']=input[0]
     else:
-        pass
-    return result, action
+        result['$or']=[]
+        for item in input:
+            result['$or'].append({'word':item})
+    return result
 
-def query_mongo(query=None, collection=None, action=None, db=None):
+def build_mongo_pages_query(input=None):
     """
-    Helper function used to submit a mongo query
+    Builds a mongo query to look up documents from the given cursor.
+    """
+    for word in input:
+        for index in word:
+            # Concatenate words and indices to build a query
+            pass
+    return result
+
+def query_mongo_index(query=None, collection=None, db=None):
+    """
+    Submits a query regarding indices to mongodb.
     """
     results = None
-    if query != None and collection != None and action != None and db != None:
+    if query != None and collection != None and db != None:
         selected_collection = db.dbconnection[collection]
-        if action == "select_indices":
-            cursor = selected_collection.find(query)
-            results = {}
-            results_count = cursor.count()
-            for item in cursor:
-                results[item['word']] = item['index']
-        elif action == "select_documents":
-            #derp
-            results = selected_collection.find(query)
+        cursor = selected_collection.find(query)
+        results = {}
+        results_count = cursor.count()
+        for item in cursor:
+            results[item['word']] = item['index']
         return results, results_count
     else:
         pass # You done fucked up son
 
+def query_mongo_pages(query=None, collection=None, db=None):
+    """
+    Submits a query regarding pages to mongodb.
+    """
+    pass
+
 def combine_cursors(input=None):
     """
-    Helper function that combines cursor dictionaries fed to it.
+    Combines mongo query cursor dictionaries.
     """
     output = {}
     if type(input)==dict:
