@@ -49,18 +49,19 @@ def build_mongo_pages_query(input=None):
     """
     Builds a mongo query to look up documents from the given cursor.
     """
-    result = {}
-    hits = {}
-    if len(input) < 1:
+    result, hits = {}, {}
+    result['$or'] = []
+    if len(input) > 1:
         for item in input:
-            result['url']=input
-            #hits[item] = blah
+            for subitem in item:
+                for subitem in input[item]:
+                    hits[subitem] = input[item][subitem]
+                    result['$or'].append({'url':subitem})
     else:
-        result['$or'] = []
-        for item in input:
-            for subitem in input[item]:
-                hits[subitem] = input[item][subitem]
-                result['$or'].append({'url':subitem})
+        for word_dict in input:
+            for word in input[word_dict]:
+                hits[word] = input[word_dict][word]
+                result['$or'].append({'url':word})
     return result, hits
 
 def query_mongo_index(query=None, collection=None, db=None):
