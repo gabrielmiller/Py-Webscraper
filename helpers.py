@@ -49,10 +49,12 @@ def build_mongo_pages_query(input=None):
     """
     Builds a mongo query to look up documents from the given cursor.
     """
-    for word in input:
-        for index in word:
-            # Concatenate words and indices to build a query
-            pass
+    result = {}
+    #input=input.split()
+    #for word in input:
+    #    for index in word:
+    #        pass
+    #        # Concatenate words and indices to build a query
     return result
 
 def query_mongo_index(query=None, collection=None, db=None):

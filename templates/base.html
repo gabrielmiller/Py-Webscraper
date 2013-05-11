@@ -18,11 +18,11 @@
 {% if context.DEBUG==True %}
 <h1>DEBUG:</h1>
 <h4>Context dictionary:</h4>
-        <ul>
-    {% for item in context %}
-        <li><strong>{{ item }}</strong> - {{ context[item] }}</li>
-    {% endfor %}
-        </ul>
+<ul>
+{% for item in context %}
+    <li><strong>{{ item }}</strong> - {{ context[item] }}</li>
+{% endfor %}
+</ul>
 <hr style="border:3px solid #000;">
 <br>
 {% endif %}
@@ -31,11 +31,13 @@
     {% if messages %}
 <br><br>
 <div class="row">
+    <!--
     <div style="text-align:center;">
             {% for category, message in messages %}
                 <p class="{{ category }}">{{ message }}</p>
             {% endfor %}
     </div>
+    -->
 <br><br>
 </div>
 <div class="row">

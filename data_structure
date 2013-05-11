@@ -41,3 +41,38 @@ array (
     )
 )
 
+array (
+    "url"=>"url1",
+    "pagetext"=>"Derp doop deep diggty doo wop dee voop.",
+    "pagerank"=>0.4,
+    "title"=>"URL1's page title",
+    "date"=>"20130511",
+    "flavor"=>"blood"
+)
+
+array (
+    "url"=>"url2",
+    "pagetext"=>"beebity boop bop beeweeoop bop bop bleeb beep boop.",
+    "pagerank"=>0.32,
+    "title"=>"URL2's page title",
+    "date"=>"20130511",
+    "flavor"=>"blood"
+)
+
+array (
+    "url"=>"url3",
+    "pagetext"=>"Hurrrrr derr doop boo boo doo too see dee bee dee.",
+    "pagerank"=>0.37,
+    "title"=>"URL3's page title",
+    "date"=>"20130511",
+    "flavor"=>"thunder"
+)
+
+array (
+    "url"=>"url4",
+    "pagetext"=>"beep beep honk honk beep beep honk honk honk",
+    "pagerank"=>0.27,
+    "title"=>"URL4's page title",
+    "date"=>"20130511",
+    "flavor"=>"lightning"
+)

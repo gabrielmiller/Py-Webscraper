@@ -35,6 +35,7 @@ def search():
     if context.get('query'):
         mongo_query = helpers.build_mongo_index_query(input=context['query'])
         #flash('query: '+str(mongo_query), category='text-info')
+        context['index_cursor'] = mongo_query
         if mongo_query != None:
             cursor, cursor_count = helpers.query_mongo_index(query=mongo_query, collection=settings.COLLECTION_INDEX, db=dbconnection)
             context['cursor'] = cursor
@@ -42,16 +43,16 @@ def search():
             if cursor_count > 1:
                 cursor = helpers.combine_cursors(cursor)
             context['combined_cursor'] = cursor
-            #documents = helpers.query_mongo(query=cursor, collection=settings.COLLECTION_DOCUMENTS, action="select_documents")
+            documents = helpers.query_mongo_pages(query=cursor, collection=settings.COLLECTION_DOCUMENTS)
+            context['documents'] = documents
             #results = ""
             #for item in cursor:
             #    results += str(item)
             #if results:
-            flash('Results: '+str(cursor), category='text-info')
+            #flash('Results: '+str(cursor), category='text-info')
             #iterate through results
         else:
             flash('No results were found', category='text-error')
-#        
     return render_template("search.html", context=context)
 
 @app.route("/spider")
