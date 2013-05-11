@@ -14,6 +14,14 @@ def remove_duplicate_dictionaries(input):
         raise("remove_duplicate_dictionaries requires a list input.")
     return [dict(a_tuple) for a_tuple in set(tuple(item.items()) for item in input)]
 
+def remove_duplicate_numbers(input):
+    """
+    Removes duplicate numbers from a list of numbers.
+    """
+    if type(input) != list:
+        raise("remove_duplicate_numbers requires a list input.")
+    return list(set(input))
+
 def get_context(input={}):
     """
     Builds the page context dictionary for each response.
@@ -62,12 +70,14 @@ def build_mongo_pages_query(input=None):
     if len(input) > 1:
         for word in input:
             for url in input[word]:
-                #print url, word
                 result['$or'].append({'url':url})
-                #if(hits.get(url)):
-                #    hits[url].append
-                #else:
-                #    hits[url] = []
+                for word_number in input[word][url]:
+                    if hits.get(url):
+                        hits[url].append(word_number)
+                    else:
+                        hits[url] = [word_number]
+        for key in hits:
+            hits[key] = remove_duplicate_numbers(hits[key])
         result['$or'] = remove_duplicate_dictionaries(result['$or'])
     else:
         for search_word in input:
