@@ -33,16 +33,16 @@ def search():
     dbconnection = database.DatabaseConnection()
     dbconnection.connect()
     if context.get('query'):
-        mongo_query = database.build_mongo_index_query(input=context['query'])
+        query_index = database.build_mongo_index_query(input=context['query'])
         #flash('query: '+str(mongo_query), category='text-info')
-        context['index_cursor'] = mongo_query
-        if mongo_query != None:
-            cursor, cursor_count = database.query_mongo_index(query=mongo_query, collection=settings.COLLECTION_INDEX, db=dbconnection)
+        context['query_index'] = query_index
+        if query_index != None:
+            cursor, cursor_count = database.query_mongo_index(query=query_index, collection=settings.COLLECTION_INDEX, db=dbconnection)
             context['cursor'] = cursor
             context['cursor_count'] = cursor_count
-            pages_query, pages_hits = database.build_mongo_pages_query(input=cursor)
-            context['pages_query'] = pages_query
-            context['pages_hits'] = pages_hits
+            query_pages, query_pages_hits = database.build_mongo_pages_query(input=cursor)
+            context['query_pages'] = query_pages
+            context['query_pages_hits'] = query_pages_hits
 
             #documents = database.query_mongo_pages(query=cursor, collection=settings.COLLECTION_DOCUMENTS)
             #context['documents'] = documents
