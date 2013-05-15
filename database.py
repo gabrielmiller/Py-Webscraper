@@ -62,7 +62,7 @@ def build_mongo_pages_query(input=None):
                 result['$or'].append({'url':url})
     return result, hits
 
-def query_mongo_index(query=None, collection=None, db=None):
+def query_mongo(query=None, collection=None, db=None):
     """
     Submits a query regarding indices to mongodb.
     """
@@ -72,14 +72,12 @@ def query_mongo_index(query=None, collection=None, db=None):
         cursor = selected_collection.find(query)
         results = {}
         results_count = cursor.count()
-        for item in cursor:
-            results[item['word']] = item['index']
+        if collection = COLLECTION_INDEX:
+            for item in cursor:
+                results[item['word']] = item['index']
+        else if collection = COLLECTION_DOCUMENTS:
+            for item in cursor:
+                results[item['pages']] = item['index']
         return results, results_count
     else:
-        return None, None # You done fucked up son
-
-def query_mongo_pages(query=None, collection=None, db=None):
-    """
-    Submits a query regarding pages to mongodb.
-    """
-    pass
+        return None, None
