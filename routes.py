@@ -43,9 +43,9 @@ def search():
             query_pages, query_pages_hits = database.build_mongo_pages_query(input=cursor)
             context['query_pages'] = query_pages
             context['query_pages_hits'] = query_pages_hits
-
-            #documents = database.query_mongo(query=cursor, collection=settings.COLLECTION_DOCUMENTS)
-            #context['documents'] = documents
+            documents, documents_count = database.query_mongo(query=query_pages, collection=settings.COLLECTION_DOCUMENTS, db=dbconnection)
+            context['documents'] = documents
+            context['documents_count'] = documents_count
             #results = ""
             #for item in cursor:
             #    results += str(item)

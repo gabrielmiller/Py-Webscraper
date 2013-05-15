@@ -77,7 +77,7 @@ def query_mongo(query=None, collection=None, db=None):
                 results[item['word']] = item['index']
         elif collection == COLLECTION_DOCUMENTS:
             for item in cursor:
-                results[item['pages']] = item['index']
+                results[item['url']] = item
         return results, results_count
     else:
         return None, None

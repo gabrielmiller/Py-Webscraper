@@ -1,4 +1,5 @@
 import unittest
+from bson.objectid import ObjectId
 from random import randint
 from settings import *
 from spider import *
@@ -18,12 +19,22 @@ class DatabaseTests(unittest.TestCase):
     def setUp(self):
         self.dbconnection = database.DatabaseConnection()
         self.dbconnection.connect()
+        self.maxDiff = None
 
     def test_a_known_search_of_one_word_returns_expected_documents(self):
         """
         Verifies a known input index cursor returns the correct documents.
         """
-        pass
+        self.search_query = {'$or': [{'url': u'url1'}, {'url': u'url4'}, {'url': u'url2'}, {'url': u'url3'}]}
+        self.expected_result = {
+u'url4': {u'title': u"URL4's page title", u'url': u'url4', u'pagetext': u'beep beep honk honk beep beep honk honk honk', u'pagerank': 0.27, u'date': u'20130511', u'flavor': u'lightning', u'_id': ObjectId('518ee0c72938d8587f000000')},
+u'url1': {u'title': u"URL1's page title", u'url': u'url1', u'pagetext': u'Derp doop deep diggty doo wop dee voop.', u'pagerank': 0.4, u'date': u'20130511', u'flavor': u'blood', u'_id': ObjectId('518edf9f2938d80c5a000000')},
+u'url3': {u'title': u"URL3's page title", u'url': u'url3', u'pagetext': u'Hurrrrr derr doop boo boo doo too see dee bee dee.', u'pagerank': 0.37, u'date': u'20130511', u'flavor': u'thunder', u'_id': ObjectId('518ee0c02938d8dc7c000002')},
+u'url2': {u'title': u"URL2's page title", u'url': u'url2', u'pagetext': u'beebity boop bop beeweeoop bop bop bleeb beep boop.', u'pagerank': 0.32, u'date': u'20130511', u'flavor': u'blood', u'_id': ObjectId('518edfdc2938d80e5a000000')}}
+        self.expected_result_count = 4
+        self.result, self.result_count = database.query_mongo(query=self.search_query, collection=COLLECTION_DOCUMENTS, db=self.dbconnection)
+        self.assertEqual(self.result, self.expected_result), "A known pages query with known results returned incorrect results."
+        self.assertEqual(self.result_count, self.expected_result_count), "A known pages query with known results returned the wrong number of results."
 
     def test_a_known_search_of_two_words_returns_expected_indices(self):
         """
