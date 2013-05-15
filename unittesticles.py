@@ -33,7 +33,7 @@ class DatabaseTests(unittest.TestCase):
         self.expected_result={u'word1':{u'url4': [6], u'url1': [9], u'url3': [1, 3, 4], u'url2': [1]},
                               u'word2':{u'url4': [5], u'url1': [6], u'url3': [12], u'url2': [74]}}
         self.query = database.build_mongo_index_query(input=self.search_query)
-        self.cursor, self.cursor_count = database.query_mongo_index(query=self.query, collection=COLLECTION_INDEX, db=self.dbconnection)
+        self.cursor, self.cursor_count = database.query_mongo(query=self.query, collection=COLLECTION_INDEX, db=self.dbconnection)
         self.assertEqual(self.cursor, self.expected_result), "Test of two known search results does not give the correct response."
 
     def test_building_a_single_word_mongo_index_query(self):

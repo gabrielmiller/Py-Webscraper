@@ -37,14 +37,14 @@ def search():
         #flash('query: '+str(mongo_query), category='text-info')
         context['query_index'] = query_index
         if query_index != None:
-            cursor, cursor_count = database.query_mongo_index(query=query_index, collection=settings.COLLECTION_INDEX, db=dbconnection)
+            cursor, cursor_count = database.query_mongo(query=query_index, collection=settings.COLLECTION_INDEX, db=dbconnection)
             context['cursor'] = cursor
             context['cursor_count'] = cursor_count
             query_pages, query_pages_hits = database.build_mongo_pages_query(input=cursor)
             context['query_pages'] = query_pages
             context['query_pages_hits'] = query_pages_hits
 
-            #documents = database.query_mongo_pages(query=cursor, collection=settings.COLLECTION_DOCUMENTS)
+            #documents = database.query_mongo(query=cursor, collection=settings.COLLECTION_DOCUMENTS)
             #context['documents'] = documents
             #results = ""
             #for item in cursor:
