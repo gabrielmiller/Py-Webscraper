@@ -4,6 +4,7 @@ from settings import *
 from spider import *
 from routes import *
 import database
+import helpers
 
 """
 This module includes all of the unit tests.
@@ -84,6 +85,31 @@ class DatabaseTests(unittest.TestCase):
         self.result, self.hits = database.build_mongo_pages_query(input=self.test_input_cursor)
         self.assertEqual(self.result, self.expected_output), "Building a page query for a two word search is broken."
         self.assertEqual(self.hits, self.expected_hits), "Building a page word hits list for a two word search is broken."
+
+class HelperTests(unittest.TestCase):
+    """
+    Tests functions in the helpers module.
+    """
+
+    def test_remove_duplicate_dictionaries(self):
+        """
+        Compares list with duplicate dictionaries to a known list of the
+        distinct dictionaries in the former list.
+        """
+        self.input = [{"item a": 1},{"item b":3},{"item a":1},{"item b":2}]
+        self.expected_output = [{"item b": 2},{"item b":3},{"item a":1}]
+        self.result = helpers.remove_duplicate_dictionaries(self.input)
+        self.assertEqual(self.result, self.expected_output), "helpers.remove_duplicate_dictionaries is not removing duplicate dictionaries."
+
+    def test_remove_duplicate_numbers(self):
+        """
+        Compares list with duplicate numbers to a known list of the
+        distinct numbers values in the former list.
+        """
+        self.input = [1,6,2,7,3,4,5,1,6,7,7,7,8]
+        self.expected_output = [1,2,3,4,5,6,7,8]
+        self.result = helpers.remove_duplicate_numbers(self.input)
+        self.assertEqual(self.result, self.expected_output), "helpers.remove_duplicate_numbers is not removing duplicate numbers."
 
 class SpiderTests(unittest.TestCase):
     """
