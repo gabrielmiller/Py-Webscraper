@@ -72,10 +72,10 @@ def query_mongo(query=None, collection=None, db=None):
         cursor = selected_collection.find(query)
         results = {}
         results_count = cursor.count()
-        if collection = COLLECTION_INDEX:
+        if collection == COLLECTION_INDEX:
             for item in cursor:
                 results[item['word']] = item['index']
-        else if collection = COLLECTION_DOCUMENTS:
+        elif collection == COLLECTION_DOCUMENTS:
             for item in cursor:
                 results[item['pages']] = item['index']
         return results, results_count
