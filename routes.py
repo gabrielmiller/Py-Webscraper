@@ -33,18 +33,19 @@ def search():
     dbconnection = database.DatabaseConnection()
     dbconnection.connect()
     if context.get('query'):
-        mongo_query = helpers.build_mongo_index_query(input=context['query'])
+        mongo_query = database.build_mongo_index_query(input=context['query'])
         #flash('query: '+str(mongo_query), category='text-info')
         context['index_cursor'] = mongo_query
         if mongo_query != None:
-            cursor, cursor_count = helpers.query_mongo_index(query=mongo_query, collection=settings.COLLECTION_INDEX, db=dbconnection)
+            cursor, cursor_count = database.query_mongo_index(query=mongo_query, collection=settings.COLLECTION_INDEX, db=dbconnection)
             context['cursor'] = cursor
             context['cursor_count'] = cursor_count
-            if cursor_count > 1:
-                cursor = helpers.combine_cursors(cursor)
-            context['combined_cursor'] = cursor
-            documents = helpers.query_mongo_pages(query=cursor, collection=settings.COLLECTION_DOCUMENTS)
-            context['documents'] = documents
+            pages_query, pages_hits = database.build_mongo_pages_query(input=cursor)
+            context['pages_query'] = pages_query
+            context['pages_hits'] = pages_hits
+
+            #documents = database.query_mongo_pages(query=cursor, collection=settings.COLLECTION_DOCUMENTS)
+            #context['documents'] = documents
             #results = ""
             #for item in cursor:
             #    results += str(item)
