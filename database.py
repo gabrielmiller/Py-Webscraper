@@ -64,7 +64,7 @@ def build_mongo_pages_query(input=None):
 
 def query_mongo(query=None, collection=None, db=None):
     """
-    Submits a query regarding indices to mongodb.
+    Submits a select query to mongodb.
     """
     results = None
     if query != None and collection != None and db != None:
