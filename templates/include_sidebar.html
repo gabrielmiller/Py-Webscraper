@@ -7,6 +7,10 @@
         <option value="len"{% if context.sort == "len" %} selected {% endif %}>Page length</option>
         <option value="cha"{% if context.sort == "cha" %} selected {% endif %}>Chaos</option>
     </select>
+    <select class="input-block-level" name="order">
+        <option value="-1"{% if context.order == "-1" %} selected {% endif %}>Descending</option>
+        <option value="1"{% if context.order == "1" %} selected {% endif %}>Ascending</option>
+    </select>
 
     <p>Display:</p>
     <select class="input-block-level" name="display">

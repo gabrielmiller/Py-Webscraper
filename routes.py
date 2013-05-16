@@ -43,7 +43,7 @@ def search():
             query_pages, query_pages_hits = database.build_mongo_pages_query(input=cursor)
             context['query_pages'] = query_pages
             context['query_pages_hits'] = query_pages_hits
-            documents, documents_count = database.query_mongo(query=query_pages, collection=settings.COLLECTION_DOCUMENTS, db=dbconnection)
+            documents, documents_count = database.query_mongo(query=query_pages, collection=settings.COLLECTION_DOCUMENTS, db=dbconnection, sort=context['sort'], number_of_results=context['results'], order=context['order'])
             context['documents'] = documents
             context['documents_count'] = documents_count
             #results = ""

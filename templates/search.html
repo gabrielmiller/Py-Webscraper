@@ -17,7 +17,13 @@
         <!-- <h3>Search results for '{{ context.query }}':</h3> -->
         <h6>Search results for "<i>{{ context.query }}</i>":</h6>
 
-        <!-- Iterate through search results and paginate -->
+        {% for result in context.documents %}
+        <div class="search_result">
+            <h4><a href="#">{{result.title}}</a></h4>
+            <h6>{{result.date}}</h6>
+            <p>{{result.pagetext}}</p>
+        </div>
+        {% endfor %}
 
     </div>
 

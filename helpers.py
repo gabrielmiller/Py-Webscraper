@@ -37,12 +37,10 @@ def get_query_string(input=None, context={}):
     Checks the query string for the parameter "query" and returns its value if
     present. If that parameter is not present it returns null.
     """
-    if input:
-        context['query'] = input.get('query')
-        context['sort'] = input.get('sort')
-        context['display'] = input.get('display')
-        context['page'] = input.get('page')
-        context['results'] = input.get('results')
-        return context
-    else:
-        return None
+    context['query'] = input.get('query') if input.get('query') else settings.DEFAULT_QUERY
+    context['sort'] = input.get('sort') if input.get('sort') else settings.DEFAULT_SORT
+    context['order'] = int(input.get('order')) if input.get('order') else settings.DEFAULT_ORDER
+    context['display'] = input.get('display') if input.get('display') else settings.DEFAULT_DISPLAY
+    context['page'] = input.get('page') if input.get('page') else settings.DEFAULT_PAGE
+    context['results'] = int(input.get('results')) if input.get('results') else settings.DEFAULT_NUMBER_OF_RESULTS
+    return context

@@ -41,13 +41,12 @@ def build_mongo_pages_query(input=None):
     """
     result, hits = {}, {}
     result['$or'] = []
+
     if len(input) > 1:
         for word in input:
             for url in input[word]:
                 result['$or'].append({'url':url})
                 for word_number in input[word][url]:
-                    #print word, url, word_number, input[word][url], input[word][url][word_number]
-                    #print word, url, word_number, input[word][url] #, input[word][url][word_number]
                     if hits.get(url):
                         hits[url].append(word_number)
                     else:
@@ -60,24 +59,36 @@ def build_mongo_pages_query(input=None):
             for url in input[search_word]:
                 hits[url] = input[search_word][url]
                 result['$or'].append({'url':url})
+
     return result, hits
 
-def query_mongo(query=None, collection=None, db=None):
+def query_mongo(query=None, collection=None, db=None, sort=DEFAULT_SORT, number_of_results=DEFAULT_NUMBER_OF_RESULTS, order=DEFAULT_ORDER):
     """
     Submits a select query to mongodb.
     """
     results = None
+    if sort == 'rel':
+        sort = 'pagerank'
+    elif sort == 'dat':
+        sort = 'date'
+    elif sort == 'len':
+        pass
+    elif sort == 'cha':
+        pass
+    else:
+        sort = None
     if query != None and collection != None and db != None:
         selected_collection = db.dbconnection[collection]
-        cursor = selected_collection.find(query)
-        results = {}
+        cursor = selected_collection.find(query).sort(sort, order).limit(number_of_results)
         results_count = cursor.count()
         if collection == COLLECTION_INDEX:
+            results = {}
             for item in cursor:
                 results[item['word']] = item['index']
         elif collection == COLLECTION_DOCUMENTS:
+            results = []
             for item in cursor:
-                results[item['url']] = item
+                results.append(item)
         return results, results_count
     else:
         return None, None
