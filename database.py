@@ -66,7 +66,6 @@ def query_mongo(query=None, collection=None, db=None, sort=DEFAULT_SORT, number_
     """
     Submits a select query to mongodb.
     """
-    results = None
     if sort == 'rel':
         sort = 'pagerank'
     elif sort == 'dat':
@@ -91,4 +90,4 @@ def query_mongo(query=None, collection=None, db=None, sort=DEFAULT_SORT, number_
                 results.append(item)
         return results, results_count
     else:
-        return None, None
+        return [], 0

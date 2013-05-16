@@ -46,14 +46,10 @@ def search():
             documents, documents_count = database.query_mongo(query=query_pages, collection=settings.COLLECTION_DOCUMENTS, db=dbconnection, sort=context['sort'], number_of_results=context['results'], order=context['order'])
             context['documents'] = documents
             context['documents_count'] = documents_count
-            #results = ""
-            #for item in cursor:
-            #    results += str(item)
-            #if results:
-            #flash('Results: '+str(cursor), category='text-info')
-            #iterate through results
+            if(context['documents_count'] == 0):
+                flash('No results were found.', category='text-error')
         else:
-            flash('No results were found', category='text-error')
+            flash('No results were found.', category='text-error')
     return render_template("search.html", context=context)
 
 @app.route("/spider")
