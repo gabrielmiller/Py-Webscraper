@@ -1,0 +1,2 @@
+User-agent: Toastie
+Disallow: /unscannable_to_ua_Toastie
