@@ -19,8 +19,8 @@ url_list, black_list, inverted_index = [], [], {}
 class Webpage():
     """
     Objects that refer to individual webpages. If the url is scrapeable the
-    object will be filled with that data and inserted into a database for
-    searching.
+    object will be filled with that data, indexed, and inserted into a database
+    to be searched.
     """
     number_of_scraped_pages = 0
 
@@ -42,6 +42,7 @@ class Webpage():
         Checks whether the page is allowed to be crawled
         """
         if self.need_to_be_scanned is True:
+            # REFACTOR to remove try statement.
             try:
                 headers = {'User-agent':SPIDER_USER_AGENT}
                 self.urlparse = urlparse.urlparse(self.url)
@@ -58,6 +59,7 @@ class Webpage():
         directly, while elements of it aee scraped in parse_page
         """
         headers = {'User-agent':SPIDER_USER_AGENT}
+        #REFACTOR to remove try
         try:
             self.request = requests.get(self.url, headers=headers)
             self.pagehtml = BeautifulSoup(self.request.text)
@@ -127,11 +129,13 @@ def outgoing_links_to_pagerank(dictionary_of_outgoing_links):
                 pagerank[outgoing_url]['incoming links'] = []
             pagerank[outgoing_url]['incoming links'].append(item)
     for item in pagerank:
+        #REFACTOR to remove try from the logic
         try:
             pagerank[item]['number of outgoing links'] = len(dictionary_of_outgoing_links[item])
         except KeyError: #If a page was linked to but it was not scanned there will be a KeyError. This will fill in the "best known" information for that record.
             pagerank[item] = {'number of outgoing links': 0, 'incoming links':[]}
             for subitem in pagerank:
+                #REFACTOR to remove try
                 try:
                     if item in dictionary_of_outgoing_links[subitem]:
                         pagerank[item]['incoming links'].append(subitem)
