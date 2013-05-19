@@ -1,6 +1,6 @@
 from pymongo import Connection
 from pymongo.errors import ConnectionFailure
-from settings import *
+import settings
 import helpers
 
 class DatabaseConnection():
@@ -13,13 +13,13 @@ class DatabaseConnection():
         Establishes a database connection
         """
         try:
-            connection = Connection(host=DATABASE_HOST, port=DATABASE_PORT)
+            connection = Connection(host=settings.DATABASE_HOST, port=settings.DATABASE_PORT)
         except ConnectionFailure, error:
             return "Could not connect to database: %s" % error
             print "Could not connect to database: %s \n" % error
             if __name__ == "spider":
                 sys.exit(1)
-        self.dbconnection = connection[DATABASE_NAME]
+        self.dbconnection = connection[settings.DATABASE_NAME]
 
 def build_mongo_index_query(input=None):
     """
@@ -62,7 +62,7 @@ def build_mongo_pages_query(input=None):
 
     return result, hits
 
-def query_mongo(query=None, collection=None, db=None, sort=DEFAULT_SORT, number_of_results=DEFAULT_NUMBER_OF_RESULTS, order=DEFAULT_ORDER):
+def query_mongo(query=None, collection=None, db=None, sort=settings.DEFAULT_SORT, number_of_results=settings.DEFAULT_NUMBER_OF_RESULTS, order=settings.DEFAULT_ORDER):
     """
     Submits a select query to mongodb.
     """
@@ -80,11 +80,11 @@ def query_mongo(query=None, collection=None, db=None, sort=DEFAULT_SORT, number_
         selected_collection = db.dbconnection[collection]
         cursor = selected_collection.find(query).sort(sort, order).limit(number_of_results)
         results_count = cursor.count()
-        if collection == COLLECTION_INDEX:
+        if collection == settings.COLLECTION_INDEX:
             results = {}
             for item in cursor:
                 results[item['word']] = item['index']
-        elif collection == COLLECTION_DOCUMENTS:
+        elif collection == settings.COLLECTION_DOCUMENTS:
             results = []
             for item in cursor:
                 results.append(item)
