@@ -18,3 +18,6 @@ Python, Flask, Werkzeug, Jinja, Requests, urlparse, re, robotparser, pymongo, Mo
 
     source bin/activate
     bin/python2.7 application.py
+
+# Notes
+To safely close the virtual environment run the command 'deactivate'
