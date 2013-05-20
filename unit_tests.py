@@ -179,11 +179,6 @@ class SpiderTests(unittest.TestCase):
         """
         Tests if a page entered scannable in a robots.txt is correctly
         interpreted as scannable.
-
-        curl of helium/robots.txt responds as follows:
-
-        User-agent: Toastie
-        Disallow: /unscannable_to_ua_Toastie
         """
         url_of_interest = "http://helium/scannable_to_ua_Toastie"
         self.beepboop.load_url(url_of_interest)
@@ -196,11 +191,6 @@ class SpiderTests(unittest.TestCase):
         """
         Tests if a page entered unscannable in a robots.txt is correctly
         interpreted as unscannable.
-
-        curl of helium/robots.txt responds as follows:
-
-        User-agent: Toastie
-        Disallow: /unscannable_to_ua_Toastie
         """
         url_of_interest2 = "http://helium/unscannable_to_ua_Toastie"
         self.beepboop.load_url(url_of_interest2)
