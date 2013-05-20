@@ -12,14 +12,14 @@ This module contains the routing for the search front-end of the website.
 @app.route("/favicon.ico")
 def favicon():
     """
-    Returns the URL for the favicon dynamically.
+    Serves the favicon through the app.
     """
     return send_from_directory(os.path.join(app.root_path, 'static'), 'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 @app.route("/")
 def frontpage():
     """
-    Renders the search splash page.
+    Renders the front page.
     """
     context = helpers.get_context(request)
     return render_template("frontpage.html", context=context)
