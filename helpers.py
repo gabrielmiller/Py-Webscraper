@@ -44,3 +44,22 @@ def get_query_string(input=None, context={}):
     context['page'] = input.get('page') if input.get('page') else settings.DEFAULT_PAGE
     context['results'] = int(input.get('results')) if input.get('results') else settings.DEFAULT_NUMBER_OF_RESULTS
     return context
+
+def get_spider_context(input={}):
+    """
+    Builds the spider input's context dictionary.
+    """
+    context={'timestamp':datetime.today()}
+    context['url'] = input.get('url') if input.get('url') else None
+    context['max_pages'] = input.get('max_pages') if input.get('max_pages') else settings.DEFAULT_MAX_PAGES
+    #max frontiers
+    #max hops
+    #etc.
+    return context
+
+def build_queue_input(input={}):
+    """
+    Constructs the queue input object.
+    """
+    queue_job = {}
+    return queue_job

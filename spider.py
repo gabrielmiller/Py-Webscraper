@@ -2,6 +2,7 @@ import sys
 import requests
 import urlparse
 import re
+import queue
 from robotparser import RobotFileParser
 from BeautifulSoup import BeautifulSoup
 from time import sleep
@@ -14,9 +15,9 @@ SPIDER_USER_AGENT = 'Toastie'
 PAGERANK_ITERATIONS = 30
 PAGERANK_DAMPING = 0.85
 
-url_list, black_list, inverted_index = [], [], {}
+urls_to_be_scraped, scraped_urls, black_list, inverted_index = [], [], [], {}
 
-class Webpage():
+class Webpage(object):
     """
     Objects that refer to individual webpages. If the url is scrapeable the
     object will be filled with that data, indexed, and inserted into a database
@@ -58,7 +59,7 @@ class Webpage():
         The url is requested with a GET request. The page html is scraped
         directly, while elements of it aee scraped in parse_page
         """
-        headers = {'User-agent':SPIDER_USER_AGENT}
+        self.headers = {'User-agent':SPIDER_USER_AGENT}
         #REFACTOR to remove try
         try:
             self.request = requests.get(self.url, headers=headers)
@@ -168,32 +169,32 @@ def page_rank(crawled_sites_incoming_link_format, number_of_iterations):
 
 def main():
     """
-    Take the provided seed, max frontiers, max hops, and max pages and 
+    Take the provided seed, max frontiers, max hops, and max pages and
     instantiate them
     Will implement frontiers and hops in a later revision
     """
     seed = None
     max_pages = None
     firstseed = 0
-    url_list.append(firstseed)
+    urls_to_be_scraped.append(firstseed)
 
-    for item in url_list:
+    for url in url_list:
         if len(Webpage.instanceID) > maxpages:
             break
         #if frontier > max_frontiers:
         #    break
         #if hop > max_hops:
         #    break
-        item = Webpage()
-        item.load_url(url=seed)
-        item.page_robot_scannable()
-        if item.need_to_be_scanned is True:
-            item.get_page()
-            item.parse_parge()
-            item.inverted_index_page()
-            item.set_page_scanned()
+        url = Webpage()
+        url.load_url(url=seed)
+        url.page_robot_scannable()
+        if url.need_to_be_scanned is True:
+            url.get_page()
+            url.parse_parge()
+            url.inverted_index_page()
+            url.set_page_scanned()
         else:
-            item.set_page_scanned()
+            url.set_page_scanned()
         sleep(REQUEST_TIME_INCREMENT)
 
     dictionary_of_outgoing_links = {}

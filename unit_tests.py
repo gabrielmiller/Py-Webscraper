@@ -102,6 +102,16 @@ class HelperTests(unittest.TestCase):
     Tests functions in the helpers module.
     """
 
+    def test_build_queue_input(self):
+        """
+        Tests output given known input versus known output of helper function
+        build_queue_input
+        """
+        self.input = {}
+        self.output = helpers.build_queue_input(self.input)
+        self.expected_output = None
+        self.assertEqual(self.output, self.expected_output), "Output of helper function build_queue_input isn't properly created."
+
     def test_remove_duplicate_dictionaries(self):
         """
         Compares list with duplicate dictionaries to a known list of the
