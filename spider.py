@@ -15,7 +15,10 @@ SPIDER_USER_AGENT = 'Toastie'
 PAGERANK_ITERATIONS = 30
 PAGERANK_DAMPING = 0.85
 
-urls_to_be_scraped, scraped_urls, black_list, inverted_index = [], [], [], {}
+urls_to_be_scraped = []
+scraped_urls = []
+black_list = []
+inverted_index = {}
 
 class Webpage(object):
     """
@@ -33,7 +36,7 @@ class Webpage(object):
         """
         #global url_list
         self.url = url
-        if self.url not in url_list and self.url not in black_list:
+        if self.url not in urls_to_be_scraped and self.url not in black_list:
             self.need_to_be_scanned = True
         else:
             self.need_to_be_scanned = False
@@ -178,7 +181,7 @@ def main():
     firstseed = 0
     urls_to_be_scraped.append(firstseed)
 
-    for url in url_list:
+    for url in urls_to_be_scraped:
         if len(Webpage.instanceID) > maxpages:
             break
         #if frontier > max_frontiers:
@@ -199,7 +202,7 @@ def main():
 
     dictionary_of_outgoing_links = {}
 
-    for item in url_list:
+    for item in scraped_urls:
         if item.pagehtml:
             dictionary_of_outgoing_links[item.url] = item.pagelinks
 
@@ -207,7 +210,7 @@ def main():
 
     dbconnection = DatabaseConnection()
     dbconnection.connect()
-    for item in url_list:
+    for item in scraped_urls:
         if item.pagehtml:
             to_insert = {'title':item.title,
                          'url':item.url,

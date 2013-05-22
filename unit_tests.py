@@ -1,11 +1,10 @@
 import unittest
 from bson.objectid import ObjectId
 from random import randint
-from settings import *
-from spider import *
-from routes import *
 import database
 import helpers
+import spider
+import settings
 
 """
 This module includes all of the unit tests.
@@ -32,7 +31,7 @@ u'url1': {u'title': u"URL1's page title", u'url': u'url1', u'pagetext': u'Derp d
 u'url3': {u'title': u"URL3's page title", u'url': u'url3', u'pagetext': u'Hurrrrr derr doop boo boo doo too see dee bee dee.', u'pagerank': 0.37, u'date': u'20130511', u'flavor': u'thunder', u'_id': ObjectId('518ee0c02938d8dc7c000002')},
 u'url2': {u'title': u"URL2's page title", u'url': u'url2', u'pagetext': u'beebity boop bop beeweeoop bop bop bleeb beep boop.', u'pagerank': 0.32, u'date': u'20130511', u'flavor': u'blood', u'_id': ObjectId('518edfdc2938d80e5a000000')}}
         self.expected_result_count = 4
-        self.result, self.result_count = database.query_mongo(query=self.search_query, collection=COLLECTION_DOCUMENTS, db=self.dbconnection)
+        self.result, self.result_count = database.query_mongo(query=self.search_query, collection=settings.COLLECTION_DOCUMENTS, db=self.dbconnection)
         self.assertEqual(self.result, self.expected_result), "A known pages query with known results returned incorrect results."
         self.assertEqual(self.result_count, self.expected_result_count), "A known pages query with known results returned the wrong number of results."
 
@@ -44,7 +43,7 @@ u'url2': {u'title': u"URL2's page title", u'url': u'url2', u'pagetext': u'beebit
         self.expected_result={u'word1':{u'url4': [6], u'url1': [9], u'url3': [1, 3, 4], u'url2': [1]},
                               u'word2':{u'url4': [5], u'url1': [6], u'url3': [12], u'url2': [74]}}
         self.query = database.build_mongo_index_query(input=self.search_query)
-        self.cursor, self.cursor_count = database.query_mongo(query=self.query, collection=COLLECTION_INDEX, db=self.dbconnection)
+        self.cursor, self.cursor_count = database.query_mongo(query=self.query, collection=settings.COLLECTION_INDEX, db=self.dbconnection)
         self.assertEqual(self.cursor, self.expected_result), "Test of two known search results does not give the correct response."
 
     def test_building_a_single_word_mongo_index_query(self):
@@ -141,13 +140,13 @@ class SpiderTests(unittest.TestCase):
         """
         Sets the environment for testing the spider
         """
-        self.beepboop = Webpage()
+        self.beepboop = spider.Webpage()
 
     def test_new_Webpage_is_type_webpage(self):
         """
         Is a new instance of Webpage of the type Webpage?
         """
-        self.assertEqual(type(self.beepboop), type(Webpage())), "Instantiated Webpage object is not equal to type url"
+        self.assertEqual(type(self.beepboop), type(spider.Webpage())), "Instantiated Webpage object is not equal to type url"
 
     def test_new_Webpage_object_has_url_assigned_and_it_is_equal_to_assignment(self):
         """
@@ -163,7 +162,7 @@ class SpiderTests(unittest.TestCase):
         Is a blacklisted page correctly flagged to not be scanned?
         """
         theurl = "http://www.google.com"
-        black_list.append(theurl)
+        spider.black_list.append(theurl)
         self.beepboop.load_url(theurl)
         self.assertEqual(self.beepboop.need_to_be_scanned, False), "Blacklisted URL should not be scannable, but was shown to be scannable"
 
@@ -181,7 +180,7 @@ class SpiderTests(unittest.TestCase):
         Is a previously scanned page correctly flagged to not be scanned?
         """
         theurl2 = "http://www.google.com"
-        url_list.append(theurl2)
+        spider.urls_to_be_scraped.append(theurl2)
         self.beepboop.load_url(theurl2)
         self.assertEqual(self.beepboop.need_to_be_scanned, False), "Previous scanned URL should not be scannable, but was shown to be scannable"
 
@@ -215,7 +214,7 @@ class SpiderTests(unittest.TestCase):
         self.beepboop.pagetext = "How would you like to work for a big company like Google? They are quite big"
         self.beepboop.load_url("http://goatse.cx/")
         self.beepboop.inverted_index_page_text()
-        self.assertEqual(inverted_index['big']['offsets'], [8, 15]), "The inverted index is not properly functioning."
+        self.assertEqual(spider.inverted_index['big']['offsets'], [8, 15]), "The inverted index is not properly functioning."
         #for item in inverted_index:
         #    print item, inverted_index[item]
 
@@ -226,7 +225,7 @@ class SpiderTests(unittest.TestCase):
         self.beepboop.pagetext = "the able about while where when which with yet you too twas these only on every his should wants"
         self.beepboop.load_url("url")
         self.beepboop.inverted_index_page_text()
-        self.assertEqual(inverted_index, {}), "Inverted index tried to index a stopword"
+        self.assertEqual(spider.inverted_index, {}), "Inverted index tried to index a stopword"
 
     def test_outgoing_links_to_pagerank_format(self):
         """
@@ -242,7 +241,7 @@ class SpiderTests(unittest.TestCase):
                            'site2':{'incoming links':['site3', 'site1'         ], 'number of outgoing links': 1, 'pagerank': 1},
                            'site3':{'incoming links':['site2', 'site1'         ], 'number of outgoing links': 2, 'pagerank': 1}}
 
-        self.assertEqual(outgoing_links_to_pagerank(dictionary_of_outgoing_links), expected_output), "Conversion from outgoing link format to incoming link format failed."
+        self.assertEqual(spider.outgoing_links_to_pagerank(dictionary_of_outgoing_links), expected_output), "Conversion from outgoing link format to incoming link format failed."
 
     def test_pagerank_results(self):
         """
@@ -256,9 +255,9 @@ class SpiderTests(unittest.TestCase):
         #                   'site2':{'incoming links':['site3', 'site1'         ], 'number of outgoing links': 1, 'pagerank': 1},
         #                   'site3':{'incoming links':['site2', 'site1'         ], 'number of outgoing links': 2, 'pagerank': 1}}
 
-        #self.assertEqual(page_rank(expected_input, 1), {'site1':0.575, 'site2':1.0, 'site3':1.425}), "Pagerank output round 1 incorrect"
-        #self.assertEqual(page_rank(expected_input, 2), {'site1':0.755625, 'site2':1.0, 'site3':1.244375}), "Pagerank output round 2 incorrect"
-        #self.assertEqual(page_rank(expected_input, 3), {'site1':0.678859375, 'site2':1.0, 'site3':1.321140625}), "Pagerank output round 3 incorrect"
+        #self.assertEqual(spider.page_rank(expected_input, 1), {'site1':0.575, 'site2':1.0, 'site3':1.425}), "Pagerank output round 1 incorrect"
+        #self.assertEqual(spider.page_rank(expected_input, 2), {'site1':0.755625, 'site2':1.0, 'site3':1.244375}), "Pagerank output round 2 incorrect"
+        #self.assertEqual(spider.page_rank(expected_input, 3), {'site1':0.678859375, 'site2':1.0, 'site3':1.321140625}), "Pagerank output round 3 incorrect"
 
     def test_pagerank_with_an_unscanned_site(self):
         """
@@ -279,7 +278,7 @@ class SpiderTests(unittest.TestCase):
                   'site5':[                                  ]}
 
         a_random_number = randint(0,10)
-        self.assertEqual(page_rank(outgoing_links_to_pagerank(input3), a_random_number), page_rank(outgoing_links_to_pagerank(input4), a_random_number)), "Unscanned site pagerank is incorrect"
+        self.assertEqual(spider.page_rank(spider.outgoing_links_to_pagerank(input3), a_random_number), spider.page_rank(spider.outgoing_links_to_pagerank(input4), a_random_number)), "Unscanned site pagerank is incorrect"
 
     def tearDown(self):
         """
