@@ -101,15 +101,23 @@ class HelperTests(unittest.TestCase):
     Tests functions in the helpers module.
     """
 
-    def test_build_queue_input(self):
-        """
-        Tests output given known input versus known output of helper function
-        build_queue_input
-        """
-        self.input = {}
-        self.output = helpers.build_queue_input(self.input)
-        self.expected_output = None
-        self.assertEqual(self.output, self.expected_output), "Output of helper function build_queue_input isn't properly created."
+#    def test_get_spider_context(self):
+#        """
+#        A test
+#        """
+#        pass
+#   def test_get_context(self):
+#
+#       """
+#       Another test
+#       """
+#       pass
+#
+#    def test_get_query_string(self):
+#        """
+#        Yet another test
+#        """
+#        pass
 
     def test_remove_duplicate_dictionaries(self):
         """

@@ -68,6 +68,5 @@ def addspider():
     if request.method == 'POST':
         flash('Error: Adding spiders is not yet implemented. Try again later!', category='text-error')
         #context = helpers.get_spider_context(request)
-        #queue_parameters = helpers.build_queue_input(context)
-        #queue.enqueue(spider.main, queue_parameters)
+        #queue.enqueue(spider.main, context)
     return redirect(url_for('frontpage'))
