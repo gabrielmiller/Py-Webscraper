@@ -101,23 +101,14 @@ class HelperTests(unittest.TestCase):
     Tests functions in the helpers module.
     """
 
-#    def test_get_spider_context(self):
-#        """
-#        A test
-#        """
-#        pass
-#   def test_get_context(self):
-#
-#       """
-#       Another test
-#       """
-#       pass
-#
-#    def test_get_query_string(self):
-#        """
-#        Yet another test
-#        """
-#        pass
+    def test_get_query_string(self):
+        """
+        Tests helpers.get_query_string()
+        """
+        self.input = {'query':'Gimme pizza', 'sort':'rel', 'page':2}
+        self.result = helpers.get_query_string(self.input)
+        self.expected_output = {'display': None, 'order': -1, 'page': 2, 'query': 'Gimme pizza', 'results':10, 'sort': 'rel'}
+        self.assertEqual(self.result, self.expected_output), "helpers.get_query_string is not returning the correct context"
 
     def test_remove_duplicate_dictionaries(self):
         """
