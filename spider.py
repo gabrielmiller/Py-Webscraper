@@ -38,7 +38,7 @@ class Webpage(object):
         """
         Checks whether the page is allowed to be crawled
         """
-        if self.need_to_be_scanned is True:
+        if self.need_to_be_scraped is True:
             # REFACTOR to remove try statement.
             try:
                 headers = {'User-agent':settings.SPIDER_USER_AGENT}
@@ -46,9 +46,9 @@ class Webpage(object):
                 self.robotcheck = RobotFileParser()
                 self.robotcheck.set_url('http://'+self.urlparse[1]+'/robots.txt') # Only works with http right now.
                 self.robotcheck.read()
-                self.need_to_be_scanned = self.robotcheck.can_fetch(settings.SPIDER_USER_AGENT, self.url)
+                self.need_to_be_scraped = self.robotcheck.can_fetch(settings.SPIDER_USER_AGENT, self.url)
             except:
-                self.need_to_be_scanned = False
+                self.need_to_be_scraped = False
 
     def get_page(self):
         """
@@ -110,9 +110,9 @@ class Webpage(object):
                 else:
                     inverted_index[word]['offsets'].append(index)
 
-    def set_page_scanned(self):
+    def set_page_scraped(self):
         """
-        Once the page is scanned it is flagged as such
+        Once the page is scraped it is flagged as such
         """
         self.needs_to_be_scraped = False
 
@@ -175,13 +175,13 @@ def main(seed_url=None, max_pages=settings.DEFAULT_MAX_PAGES):
                 break
             url = Webpage(url=seed_url)
             url.page_robot_scannable()
-            if url.need_to_be_scanned is True:
+            if url.need_to_be_scraped is True:
                 url.get_page()
                 url.parse_parge()
                 url.inverted_index_page()
-                url.set_page_scanned()
+                url.set_page_scraped()
             else:
-                url.set_page_scanned()
+                url.set_page_scraped()
             sleep(settings.REQUEST_TIME_INCREMENT)
 
         #Eventually look into a matrix math library for pagerank calculations
