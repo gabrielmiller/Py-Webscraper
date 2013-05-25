@@ -59,7 +59,7 @@ class Webpage(object):
         #REFACTOR to remove try
         try:
             self.request = requests.get(self.url, headers=headers)
-            self.pagehtml = BeautifulSoup(self.request.text)
+            self.pagehtml = BeautifulSoup(self.request.text) #REFACTOR, don't use BeautifulSoup
             self.count = self.instanceID.next()
             Webpage.number_of_scraped_pages += 1
         except:
@@ -193,11 +193,10 @@ def main(seed_url=None, max_pages=settings.DEFAULT_MAX_PAGES):
 
         dbconnection = DatabaseConnection()
         dbconnection.connect()
-        for item in scraped_urls:
+        for item in scraped_urls: #REFACTOR look into doing a mass insert instead of looping per url.
             if item.pagehtml:
                 to_insert = {'title':item.title,
                              'url':item.url,
-                             'pagehtml':item.pagehtml,
                              'pagetext':item.pagetext,
                              'pagerank':page_rank_dictionary[item.url],
                              'date':datetime.datetime.now()}
