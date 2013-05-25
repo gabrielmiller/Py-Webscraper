@@ -114,7 +114,7 @@ class Webpage(object):
         """
         Once the page is scanned it is flagged as such
         """
-        self.needs_to_be_scanned = False
+        self.needs_to_be_scraped = False
 
 def outgoing_links_to_pagerank(dictionary_of_outgoing_links):
     pagerank = {}
