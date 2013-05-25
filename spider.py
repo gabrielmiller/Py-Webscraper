@@ -24,18 +24,15 @@ class Webpage(object):
     """
     number_of_scraped_pages = 0
 
-    def load_url(self, url):
+    def __init__(self, url):
         """
-        A URL is passed in and the object's property url is set. If the URL
-        has already been scanned or is blacklisted then the object is flagged
-        to not be scanned.
+        Creates a webpage object and assigns it the provided url.
         """
-        #global url_list
         self.url = url
-        if self.url not in urls_to_be_scraped and self.url not in black_list:
-            self.need_to_be_scanned = True
+        if self.url not in black_list and not in scraped_urls:
+            self.needs_to_be_scraped = True
         else:
-            self.need_to_be_scanned = False
+            self.needs_to_be_scraped = False
 
     def page_robot_scannable(self):
         """
@@ -176,8 +173,7 @@ def main(seed_url=None, max_pages=settings.DEFAULT_MAX_PAGES):
         for url in urls_to_be_scraped:
             if Webpage.instanceID > maxpages:
                 break
-            url = Webpage()
-            url.load_url(url=seed_url)
+            url = Webpage(url=seed_url)
             url.page_robot_scannable()
             if url.need_to_be_scanned is True:
                 url.get_page()
