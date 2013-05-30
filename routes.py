@@ -52,21 +52,17 @@ def search():
             flash('No results were found.', category='text-error')
     return render_template("search.html", context=context)
 
-@app.route("/spider")
+@app.route("/spider", methods=["GET","POST"])
 def spider():
     """
-    Renders the spider dashboard page.
+    Get requests renders the spider dashboard page.
+    Post requests add a spider to the queue.
     """
-    context = helpers.get_context(request)
-    return render_template("spider.html", context=context)
-
-@app.route("/addspider", methods=["GET","POST"])
-def addspider():
-    """
-    Post requests to this url will add a spider.
-    """
-    if request.method == 'POST':
+    if request.method == 'GET':
+        context = helpers.get_context(request)
+        return render_template("spider.html", context=context)
+    elif request.method == 'POST':
         flash('Error: Adding spiders is not yet implemented. Try again later!', category='text-error')
         #context = helpers.get_spider_context(request)
         #queue.enqueue(spider.main, context)
-    return redirect(url_for('frontpage'))
+        return redirect(url_for('frontpage'))
