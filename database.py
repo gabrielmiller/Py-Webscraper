@@ -7,7 +7,6 @@ class DatabaseConnection():
     """
     Initiates a database connection and sets up data insertion/querying
     """
-
     def connect(self):
         """
         Establishes a database connection
