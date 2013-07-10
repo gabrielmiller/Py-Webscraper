@@ -26,10 +26,9 @@ class Webpage(object):
         Constructs a webpage object and assigns it the given url.
         """
         self.url = url
+        self.urlparse = urlparse.urlparse(self.url)
         self.get_object = None
         self.html = None
-        self.urlparse = urlparse.urlparse(self.url)
-        self.robots_txt = None
 
     def is_page_robot_scannable(self):
         """
@@ -50,13 +49,32 @@ class Webpage(object):
         """
         Returns a GET request for the page.
         """
+        return requests.get(self.url)
+
+    def parse_page(self, page):
+        """
+        Parses html. Extracts page text and a list of hrefs.
+        """
         pass
 
-    def parse_page(self):
+    def parse_hrefs(self, string):
         """
-        Parses html strings. Extracts page text and hrefs.
+        Parses hrefs out of a string.
         """
-        pass
+        hrefs = []
+        while:
+            key_word = "href=\""
+            href_start = string.find(key_word)
+            if href_start != -1:
+                href_end = string[href_start+len(key_word):].find("\"")
+                    if href_end == -1:
+                        # Throw this webpage out.
+                        break
+                hrefs.append(string[href_start+len(key_word):href_end])
+                string = string[:href_start]+string[href_end:]
+            else:
+                break
+        return hrefs
 
     def create_inverted_index(self, parsed_text):
         """
