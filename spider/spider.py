@@ -1,11 +1,11 @@
-import sys
+#import sys
 import requests
 import urlparse
 import re
-import queue
+#import queue
 import settings
 from robotparser import RobotFileParser
-from BeautifulSoup import BeautifulSoup
+#from BeautifulSoup import BeautifulSoup
 from time import sleep
 from copy import deepcopy
 from database import DatabaseConnection
