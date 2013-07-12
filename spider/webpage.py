@@ -62,14 +62,14 @@ class Webpage(object):
         Parses hrefs out of a string.
         """
         hrefs = []
-        while:
+        while 1:
             key_word = "href=\""
             href_start = string.find(key_word)
             if href_start != -1:
                 href_end = string[href_start+len(key_word):].find("\"")
-                    if href_end == -1:
-                        # Throw this webpage out.
-                        break
+                if href_end == -1:
+                    # Throw this webpage out.
+                    break
                 hrefs.append(string[href_start+len(key_word):href_end])
                 string = string[:href_start]+string[href_end:]
             else:
