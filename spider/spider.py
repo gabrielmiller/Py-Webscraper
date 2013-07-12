@@ -29,7 +29,7 @@ class Webpage(object):
         Creates a webpage object and assigns it the provided url.
         """
         self.url = url
-        if self.url not in black_list and not in scraped_urls:
+        if self.url not in black_list and self.url not in scraped_urls:
             self.needs_to_be_scraped = True
         else:
             self.needs_to_be_scraped = False
